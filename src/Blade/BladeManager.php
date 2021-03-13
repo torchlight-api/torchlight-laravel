@@ -5,6 +5,8 @@
 
 namespace Hammerstone\Torchlight\Blade;
 
+use Hammerstone\Torchlight\Block;
+
 class BladeManager
 {
     public static $blockCount = 0;
