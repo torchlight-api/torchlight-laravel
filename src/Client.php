@@ -40,7 +40,7 @@ class Client
         // @TODO handle timeout
         $response = Http::timeout(5)
             ->withToken(config('torchlight.token'))
-            ->post('https://torchlight.dev/api/blocks', [
+            ->post('https://torchlight.dev/api/highlight', [
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
             ])
             ->json();
@@ -60,7 +60,13 @@ class Client
 
     public function cache()
     {
-        return Cache::store(config('torchlight.cache'));
+        $store = config('torchlight.cache');
+
+        if ($store === null) {
+            $store = config('cache.default');
+        }
+
+        return Cache::store($store);
     }
 
     public function cachePrefix()

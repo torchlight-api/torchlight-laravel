@@ -6,6 +6,7 @@
 namespace Hammerstone\Torchlight\Blade;
 
 use Hammerstone\Torchlight\Block;
+use Hammerstone\Torchlight\Client;
 
 class BladeManager
 {
