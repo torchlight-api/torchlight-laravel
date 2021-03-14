@@ -5,6 +5,7 @@ namespace Hammerstone\Torchlight\Middleware;
 use Closure;
 use Hammerstone\Torchlight\Blade\BladeManager;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RenderTorchlight
 {
@@ -19,6 +20,10 @@ class RenderTorchlight
     {
         $response = $next($request);
 
-        return BladeManager::render($response);
+        if ($response instanceof Response) {
+            return BladeManager::render($response);
+        }
+
+        return $response;
     }
 }
