@@ -38,7 +38,7 @@ class Client
     protected function request(Collection $blocks)
     {
         // @TODO handle timeout
-        $response = Http::timeout(5)
+        $response = Http::timeout(10)
             ->withToken(config('torchlight.token'))
             ->post('https://torchlight.dev/api/highlight', [
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
