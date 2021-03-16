@@ -35,6 +35,8 @@ class BladeManager
             ob_start();
         } else if (is_file($code)) {
             $code = file_get_contents($code);
+        } else if (is_file(resource_path($code))) {
+            $code = file_get_contents(resource_path($code));
         }
 
         $block = Block::make()->setLanguage($language)->setTheme($theme);
