@@ -18,6 +18,8 @@ class Block
 
     public $html;
 
+    public $cacheBust = 0;
+
     protected $id;
 
     /**
@@ -36,6 +38,12 @@ class Block
     {
         // Generate a unique UUID.
         $this->id = $id ?? (string)Str::uuid();
+
+        // An easy way to bust all caches.
+        $this->cacheBust = config('torchlight.bust', 0);
+
+        // Set a default theme.
+        $this->theme = config('torchlight.theme');
     }
 
     /**
@@ -55,7 +63,7 @@ class Block
             $this->language .
             $this->theme .
             $this->code .
-            config('torchlight.bust', 1)
+            $this->cacheBust
         );
     }
 
@@ -101,6 +109,17 @@ class Block
     }
 
     /**
+     * @param $number
+     * @return $this
+     */
+    public function setCacheBust($number)
+    {
+        $this->cacheBust = $number;
+
+        return $this;
+    }
+
+    /**
      * @param $html
      * @return $this
      */
@@ -120,8 +139,9 @@ class Block
             'id' => $this->id(),
             'hash' => $this->hash(),
             'language' => $this->language,
-            'theme' => $this->theme ?? config('torchlight.theme'),
+            'theme' => $this->theme,
             'code' => $this->code,
+            'bust' => $this->cacheBust
         ];
     }
 
