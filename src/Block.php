@@ -51,7 +51,12 @@ class Block
      */
     public function hash()
     {
-        return md5($this->language . $this->theme . $this->code);
+        return md5(
+            $this->language .
+            $this->theme .
+            $this->code .
+            config('torchlight.bust', 1)
+        );
     }
 
     /**

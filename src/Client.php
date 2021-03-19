@@ -41,6 +41,7 @@ class Client
         $response = Http::timeout(10)
             ->withToken(config('torchlight.token'))
             ->post('https://torchlight.dev/api/highlight', [
+                'bust' => config('torchlight.bust', 1),
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
             ])
             ->json();
