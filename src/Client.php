@@ -37,15 +37,14 @@ class Client
 
     protected function request(Collection $blocks)
     {
-        // @TODO handle timeout
-        $response = Http::timeout(10)
+        $response = Http::timeout(5)
             ->withToken(config('torchlight.token'))
             ->post('https://torchlight.dev/api/highlight', [
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
             ])
             ->json();
 
-        $response = collect($response['blocks'])->keyBy('id');
+        $response = collect(Arr::get($response, 'blocks', []))->keyBy('id');
 
         $blocks->each(function (Block $block) use ($response) {
             $block->setHtml(
@@ -53,7 +52,8 @@ class Client
             );
         });
 
-        $this->setCacheFromBlocks($blocks);
+        // Only store the ones we got back from the API.
+        $this->setCacheFromBlocks($blocks, $response->keys());
 
         return $blocks;
     }
@@ -86,18 +86,16 @@ class Client
         });
     }
 
-    protected function setCacheFromBlocks(Collection $blocks)
+    protected function setCacheFromBlocks(Collection $blocks, Collection $ids)
     {
-        return $blocks->each(function (Block $block) {
-            if (!$block->html) {
-                return;
+        $blocks->only($ids)->each(function (Block $block) use ($ids) {
+            if ($block->html) {
+                $this->cache()->put(
+                    $this->cacheKey($block),
+                    $block->html,
+                    now()->addDays(7)
+                );
             }
-
-            $this->cache()->put(
-                $this->cacheKey($block),
-                $block->html,
-                now()->addDays(30)
-            );
         });
     }
 
@@ -132,6 +130,6 @@ class Client
      */
     protected function defaultHtml(Block $block)
     {
-        return "<pre><code>" . $block->code . "</code></pre>";
+        return "<pre class='torchlight'><code>" . htmlentities($block->code) . "</code></pre>";
     }
 }
