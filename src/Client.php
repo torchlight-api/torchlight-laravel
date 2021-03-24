@@ -37,9 +37,11 @@ class Client
 
     protected function request(Collection $blocks)
     {
+        $host = config('torchlight.host', 'https://api.torchlight.dev');
+
         $response = Http::timeout(5)
             ->withToken(config('torchlight.token'))
-            ->post('https://torchlight.dev/api/highlight', [
+            ->post($host . '/highlight', [
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
             ])
             ->json();
