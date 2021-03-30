@@ -5,6 +5,8 @@
 
 namespace Hammerstone\Torchlight;
 
+use Hammerstone\Torchlight\Exceptions\ConfigurationException;
+use Hammerstone\Torchlight\Exceptions\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -40,11 +42,13 @@ class Client
         $host = config('torchlight.host', 'https://api.torchlight.dev');
 
         $response = Http::timeout(5)
-            ->withToken(config('torchlight.token'))
+            ->withToken($this->getToken())
             ->post($host . '/highlight', [
                 'blocks' => $this->blocksAsRequestParam($blocks)->values(),
             ])
             ->json();
+
+        $this->potentiallyThrowRequestException($response);
 
         $response = collect(Arr::get($response, 'blocks', []))->keyBy('id');
 
@@ -58,6 +62,31 @@ class Client
         $this->setCacheFromBlocks($blocks, $response->keys());
 
         return $blocks;
+    }
+
+    protected function getToken()
+    {
+        $token = config('torchlight.token');
+
+        if (!$token) {
+            $this->throwUnlessProduction(
+                new ConfigurationException('No Torchlight token configured.')
+            );
+        }
+
+        return $token;
+    }
+
+    protected function potentiallyThrowRequestException($response)
+    {
+        if ($error = Arr::get($response, 'error')) {
+            $this->throwUnlessProduction(new RequestException($error));
+        }
+    }
+
+    protected function throwUnlessProduction($exception)
+    {
+        throw_unless(app()->environment('production'), $exception);
     }
 
     public function cache()
