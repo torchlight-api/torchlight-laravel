@@ -39,7 +39,11 @@ class BladeManager
             $code = file_get_contents(resource_path($code));
         }
 
-        $block = Block::make()->setLanguage($language)->setTheme($theme);
+        $block = Block::make()->setLanguage($language);
+
+        if ($theme) {
+            $block->setTheme($theme);
+        }
 
         if ($code) {
             $block->setCode($code);
@@ -64,7 +68,7 @@ class BladeManager
             // as the developer's code they'd like us to highlight.
             $code = ob_get_clean();
 
-            $block = $block->setCode($code);
+            $block = $block->setCode($code, $unrwapPreTags = true);
         }
 
         // Echo out a unique placeholder into the buffer, which is captured

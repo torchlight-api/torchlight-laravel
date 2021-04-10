@@ -101,9 +101,24 @@ class Block
      * @param $code
      * @return $this
      */
-    public function setCode($code)
+    public function setCode($code, $unwrapPreTags = false)
     {
-        $this->code = $this->clean($code);
+        $code = $this->clean($code);
+
+        if ($unwrapPreTags) {
+            $lines = explode("\n", $code);
+
+            if (trim(head($lines)) === '<pre>' && trim(last($lines)) === '</pre>') {
+                array_pop($lines);
+                array_shift($lines);
+
+                $code = implode("\n", $lines);
+
+                $code = $this->clean($code);
+            }
+        }
+
+        $this->code = $code;
 
         return $this;
     }
@@ -151,9 +166,7 @@ class Block
      */
     protected function clean($code)
     {
-        return $this->dedent(
-            Str::replaceLast("\n", '', $code)
-        );
+        return $this->dedent(rtrim($code));
     }
 
     /**
