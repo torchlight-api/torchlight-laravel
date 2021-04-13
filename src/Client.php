@@ -20,11 +20,11 @@ class Client
         $blocks = collect($blocks)->keyBy->id();
 
         // First set the html from the cache if it is already stored.
-        $this->setHtmlFromCache($blocks);
+        $this->setBlocksFromCache($blocks);
 
         // Then reject all the blocks that already have the html, which
         // will leave us with only the blocks we need to request.
-        $needed = $blocks->reject->html;
+        $needed = $blocks->reject->wrapped;
 
         // If there are any blocks that don't have html yet,
         // we fire a request.
@@ -53,9 +53,21 @@ class Client
         $response = collect(Arr::get($response, 'blocks', []))->keyBy('id');
 
         $blocks->each(function (Block $block) use ($response) {
-            $block->setHtml(
-                $block->html ?? $this->getHtmlFromResponse($response, $block)
-            );
+            $blockFromResponse = Arr::get($response, "{$block->id()}", []);
+
+            foreach ($this->applyDirectlyFromResponse() as $key) {
+                if (Arr::has($blockFromResponse, $key)) {
+                    $block->{$key} = $blockFromResponse[$key];
+                }
+            }
+
+            if (!$block->wrapped) {
+                $block->wrapped = $this->defaultWrapped($block);
+            }
+
+            if (!$block->highlighted) {
+                $block->highlighted = $this->defaultRendered($block);
+            }
         });
 
         // Only store the ones we got back from the API.
@@ -117,40 +129,49 @@ class Client
         });
     }
 
+    protected function applyDirectlyFromResponse()
+    {
+        return ['wrapped', 'highlighted', 'styles', 'classes'];
+    }
+
     protected function setCacheFromBlocks(Collection $blocks, Collection $ids)
     {
-        $blocks->only($ids)->each(function (Block $block) use ($ids) {
-            if ($block->html) {
-                $this->cache()->put(
-                    $this->cacheKey($block),
-                    $block->html,
-                    now()->addDays(7)
-                );
+        $keys = $this->applyDirectlyFromResponse();
+
+        $blocks->only($ids)->each(function (Block $block) use ($ids, $keys) {
+            $value = [];
+
+            foreach ($keys as $key) {
+                if ($block->{$key}) {
+                    $value[$key] = $block->{$key};
+                }
+            }
+
+            if (count($value)) {
+                $this->cache()->put($this->cacheKey($block), $value, now()->addDays(7));
             }
         });
     }
 
-    protected function setHtmlFromCache(Collection $blocks)
+    protected function setBlocksFromCache(Collection $blocks)
     {
-        $blocks->each(function (Block $block) {
-            if ($html = $this->cache()->get($this->cacheKey($block))) {
-                $block->setHtml($html);
+        $keys = $this->applyDirectlyFromResponse();
+
+        $blocks->each(function (Block $block) use ($keys) {
+            if (!$cached = $this->cache()->get($this->cacheKey($block))) {
+                return;
+            }
+
+            if (is_string($cached)) {
+                return;
+            }
+
+            foreach ($keys as $key) {
+                if (Arr::has($cached, $key)) {
+                    $block->{$key} = $cached[$key];
+                }
             }
         });
-    }
-
-    /**
-     * Get the HTML for a particular block out of the response.
-     *
-     * @param $response
-     * @param Block $block
-     * @return string
-     */
-    protected function getHtmlFromResponse(Collection $response, Block $block)
-    {
-        $html = Arr::get($response, "{$block->id()}.html", false);
-
-        return $html === false ? $this->defaultHtml($block) : $html;
     }
 
     /**
@@ -159,8 +180,19 @@ class Client
      * @param Block $block
      * @return string
      */
-    protected function defaultHtml(Block $block)
+    protected function defaultRendered(Block $block)
     {
-        return "<pre class='torchlight'><code>" . htmlentities($block->code) . "</code></pre>";
+        return htmlentities($block->code);
+    }
+
+    /**
+     * In the case where nothing returns from the API, we have to show _something_.
+     *
+     * @param Block $block
+     * @return string
+     */
+    protected function defaultWrapped(Block $block)
+    {
+        return "<pre><code class='torchlight'>" . $this->defaultRendered($block) . "</code></pre>";
     }
 }

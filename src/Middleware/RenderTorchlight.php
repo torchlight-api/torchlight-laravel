@@ -6,6 +6,7 @@ use Closure;
 use Hammerstone\Torchlight\Blade\BladeManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class RenderTorchlight
 {
@@ -20,10 +21,11 @@ class RenderTorchlight
     {
         $response = $next($request);
 
-        if ($response instanceof Response) {
-            return BladeManager::render($response);
+        // Must be a regular, HTML response.
+        if (!$response instanceof Response || !Str::contains($response->headers->get('content-type'), 'html')) {
+            return $response;
         }
 
-        return $response;
+        return BladeManager::render($response);
     }
 }

@@ -13,5 +13,5 @@ return [
     'token' => env('TORCHLIGHT_TOKEN'),
 
     // If you want to register the blade directives, set this to true.
-    'blade_directives' => true,
+    'blade_components' => true,
 ];

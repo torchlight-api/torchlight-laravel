@@ -16,7 +16,13 @@ class Block
 
     public $code;
 
-    public $html;
+    public $highlighted;
+
+    public $wrapped;
+
+    public $classes;
+
+    public $styles;
 
     public $cacheBust = 0;
 
@@ -59,20 +65,19 @@ class Block
      */
     public function hash()
     {
-        return md5(
-            $this->language .
-            $this->theme .
-            $this->code .
-            $this->cacheBust
-        );
+        return md5($this->language . $this->theme . $this->code . $this->cacheBust);
     }
 
     /**
      * @return string
      */
-    public function placeholder()
+    public function placeholder($extra = '')
     {
-        return "__torchlight-block-{$this->id()}__";
+        if ($extra) {
+            $extra = "_$extra";
+        }
+
+        return "__torchlight-block-{$this->id()}{$extra}__";
     }
 
     /**
@@ -92,7 +97,9 @@ class Block
      */
     public function setTheme($theme)
     {
-        $this->theme = $theme;
+        if ($theme) {
+            $this->theme = $theme;
+        }
 
         return $this;
     }
@@ -101,24 +108,9 @@ class Block
      * @param $code
      * @return $this
      */
-    public function setCode($code, $unwrapPreTags = false)
+    public function setCode($code)
     {
-        $code = $this->clean($code);
-
-        if ($unwrapPreTags) {
-            $lines = explode("\n", $code);
-
-            if (trim(head($lines)) === '<pre>' && trim(last($lines)) === '</pre>') {
-                array_pop($lines);
-                array_shift($lines);
-
-                $code = implode("\n", $lines);
-
-                $code = $this->clean($code);
-            }
-        }
-
-        $this->code = $code;
+        $this->code = $this->clean($code);
 
         return $this;
     }
@@ -135,12 +127,12 @@ class Block
     }
 
     /**
-     * @param $html
+     * @param $wrapped
      * @return $this
      */
-    public function setHtml($html)
+    public function setWrapped($wrapped)
     {
-        $this->html = $html;
+        $this->wrapped = $wrapped;
 
         return $this;
     }
@@ -206,5 +198,4 @@ class Block
             })
             ->implode("\n");
     }
-
 }
