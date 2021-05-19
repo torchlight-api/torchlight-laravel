@@ -7,11 +7,14 @@ return [
 
     // Which theme you want to use. You can find all of the themes at
     // https://torchlight.dev/themes, or you can provide your own.
-    'theme' => 'material-theme-palenight',
+    'theme' => env('TORCHLIGHT_THEME', 'material-theme-palenight'),
 
     // Your API token from torchlight.dev.
     'token' => env('TORCHLIGHT_TOKEN'),
 
     // If you want to register the blade directives, set this to true.
     'blade_components' => true,
+
+    // The Host of the API.
+    'host' => env('TORCHLIGHT_HOST', 'https://api.torchlight.dev'),
 ];

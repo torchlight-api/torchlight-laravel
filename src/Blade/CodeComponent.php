@@ -32,7 +32,7 @@ class CodeComponent extends Component
         $this->theme = $theme;
         $this->contents = $contents;
 
-        $this->block = Block::make()->setLanguage($this->language)->setTheme($this->theme);
+        $this->block = Block::make()->language($this->language)->theme($this->theme);
     }
 
     public function capture($contents)
@@ -43,7 +43,7 @@ class CodeComponent extends Component
             $contents = file_get_contents(resource_path($contents));
         }
 
-        BladeManager::registerBlock($this->block->setCode($contents));
+        BladeManager::registerBlock($this->block->code($contents));
     }
 
     /**
@@ -54,10 +54,9 @@ class CodeComponent extends Component
     public function render()
     {
         // Put all of the attributes on the code element, merging in our placeholder
-        // classes and style string. Echo out the slot, but capture capture it
-        // using output buffering. We then pass it through as the contents to
-        // highlight, leaving the placeholder there so we can replace it
-        // later with fully highlighted code.
+        // classes and style string. Echo out the slot, but capture it using output
+        // buffering. We then pass it through as the contents to highlight, leaving
+        // the placeholder so we can replace it later with fully highlighted code.
         return <<<'EOT'
 <code {{
         $attributes->except('style')->merge([

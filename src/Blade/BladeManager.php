@@ -19,18 +19,28 @@ class BladeManager
         static::$blocks[] = $block;
     }
 
-    public static function render(Response $response)
+    public static function renderResponse(Response $response)
     {
-        // Bail early if there are no blocks on this page.
+        // Bail early if there are no blocks registered.
         if (!static::$blocks) {
             return $response;
+        }
+
+        return $response->setContent(
+            static::renderContent($response->content())
+        );
+    }
+
+    public static function renderContent($content)
+    {
+        // Bail early if there are no blocks registered.
+        if (!static::$blocks) {
+            return $content;
         }
 
         $blocks = (new Client)->highlight(static::$blocks);
 
         static::$blocks = [];
-
-        $content = $response->content();
 
         foreach ($blocks as $block) {
             $swap = [
@@ -45,6 +55,6 @@ class BladeManager
             }
         }
 
-        return $response->setContent($content);
+        return $content;
     }
 }

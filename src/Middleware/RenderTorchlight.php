@@ -26,6 +26,6 @@ class RenderTorchlight
             return $response;
         }
 
-        return BladeManager::render($response);
+        return BladeManager::renderResponse($response);
     }
 }

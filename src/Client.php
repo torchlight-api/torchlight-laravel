@@ -7,6 +7,7 @@ namespace Hammerstone\Torchlight;
 
 use Hammerstone\Torchlight\Exceptions\ConfigurationException;
 use Hammerstone\Torchlight\Exceptions\RequestException;
+use Hammerstone\Torchlight\Exceptions\TorchlightException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -17,7 +18,9 @@ class Client
 {
     public function highlight($blocks)
     {
-        $blocks = collect($blocks)->keyBy->id();
+        $blocks = Arr::wrap($blocks);
+
+        $blocks = $this->collectionOfBlocks($blocks)->keyBy->id();
 
         // First set the html from the cache if it is already stored.
         $this->setBlocksFromCache($blocks);
@@ -39,12 +42,14 @@ class Client
 
     protected function request(Collection $blocks)
     {
+        $blocks = $this->collectionOfBlocks($blocks);
+
         $host = config('torchlight.host', 'https://api.torchlight.dev');
 
         $response = Http::timeout(5)
             ->withToken($this->getToken())
             ->post($host . '/highlight', [
-                'blocks' => $this->blocksAsRequestParam($blocks)->values(),
+                'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
             ])
             ->json();
 
@@ -66,7 +71,7 @@ class Client
             }
 
             if (!$block->highlighted) {
-                $block->highlighted = $this->defaultRendered($block);
+                $block->highlighted = $this->defaultHighlighted($block);
             }
         });
 
@@ -74,6 +79,15 @@ class Client
         $this->setCacheFromBlocks($blocks, $response->keys());
 
         return $blocks;
+    }
+
+    protected function collectionOfBlocks($blocks)
+    {
+        return collect($blocks)->each(function ($block) {
+            if (!$block instanceof Block) {
+                throw new TorchlightException('Block not instance of ' . Block::class);
+            }
+        });
     }
 
     protected function getToken()
@@ -180,7 +194,7 @@ class Client
      * @param Block $block
      * @return string
      */
-    protected function defaultRendered(Block $block)
+    protected function defaultHighlighted(Block $block)
     {
         return htmlentities($block->code);
     }
@@ -193,6 +207,6 @@ class Client
      */
     protected function defaultWrapped(Block $block)
     {
-        return "<pre><code class='torchlight'>" . $this->defaultRendered($block) . "</code></pre>";
+        return "<pre><code class='torchlight'>" . $this->defaultHighlighted($block) . "</code></pre>";
     }
 }

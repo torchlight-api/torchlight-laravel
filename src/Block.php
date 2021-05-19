@@ -5,27 +5,64 @@
 
 namespace Hammerstone\Torchlight;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class Block
 {
+    /**
+     * The language of the code that is being highlighted.
+     *
+     * @var string
+     */
     public $language;
 
+    /**
+     * The theme of the code.
+     *
+     * @var string
+     */
     public $theme;
 
+    /**
+     * The code itself.
+     *
+     * @var string
+     */
     public $code;
 
-    public $highlighted;
-
+    /**
+     * The highlighted code, wrapped in pre+code tags.
+     *
+     * @var string
+     */
     public $wrapped;
 
+    /**
+     * The highlighted code, not wrapped.
+     *
+     * @var string
+     */
+    public $highlighted;
+
+    /**
+     * Classes that should be applied to the code tag.
+     *
+     * @var string
+     */
     public $classes;
 
+    /**
+     * Styles that should be applied to the code tag.
+     *
+     * @var string
+     */
     public $styles;
 
-    public $cacheBust = 0;
-
+    /**
+     * The unique ID for the block.
+     *
+     * @var string
+     */
     protected $id;
 
     /**
@@ -45,9 +82,6 @@ class Block
         // Generate a unique UUID.
         $this->id = $id ?? (string)Str::uuid();
 
-        // An easy way to bust all caches.
-        $this->cacheBust = config('torchlight.bust', 0);
-
         // Set a default theme.
         $this->theme = config('torchlight.theme');
     }
@@ -65,10 +99,11 @@ class Block
      */
     public function hash()
     {
-        return md5($this->language . $this->theme . $this->code . $this->cacheBust);
+        return md5($this->language . $this->theme . $this->code . config('torchlight.bust'));
     }
 
     /**
+     * @param string $extra
      * @return string
      */
     public function placeholder($extra = '')
@@ -84,7 +119,7 @@ class Block
      * @param $language
      * @return $this
      */
-    public function setLanguage($language)
+    public function language($language)
     {
         $this->language = $language;
 
@@ -95,7 +130,7 @@ class Block
      * @param $theme
      * @return $this
      */
-    public function setTheme($theme)
+    public function theme($theme)
     {
         if ($theme) {
             $this->theme = $theme;
@@ -108,20 +143,9 @@ class Block
      * @param $code
      * @return $this
      */
-    public function setCode($code)
+    public function code($code)
     {
         $this->code = $this->clean($code);
-
-        return $this;
-    }
-
-    /**
-     * @param $number
-     * @return $this
-     */
-    public function setCacheBust($number)
-    {
-        $this->cacheBust = $number;
 
         return $this;
     }
@@ -130,7 +154,7 @@ class Block
      * @param $wrapped
      * @return $this
      */
-    public function setWrapped($wrapped)
+    public function wrapped($wrapped)
     {
         $this->wrapped = $wrapped;
 
@@ -148,7 +172,6 @@ class Block
             'language' => $this->language,
             'theme' => $this->theme,
             'code' => $this->code,
-            'bust' => $this->cacheBust
         ];
     }
 
