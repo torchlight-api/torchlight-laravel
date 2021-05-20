@@ -3,11 +3,11 @@
  * @author Aaron Francis <aarondfrancis@gmail.com|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight\Blade;
+namespace Torchlight\Blade;
 
-use Hammerstone\Torchlight\Block;
+use Torchlight\Block;
 use Illuminate\View\Component;
-use Hammerstone\Torchlight\Blade\BladeManager;
+use Torchlight\Blade\BladeManager;
 
 class CodeComponent extends Component
 {

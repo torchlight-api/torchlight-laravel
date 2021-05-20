@@ -3,7 +3,7 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight;
+namespace Torchlight;
 
 use Illuminate\Support\Str;
 

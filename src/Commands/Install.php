@@ -3,10 +3,10 @@
  * @author Aaron Francis <aaron@hammerstone.dev>
  */
 
-namespace Hammerstone\Torchlight\Commands;
+namespace Torchlight\Commands;
 
 use Hammerstone\Airdrop\AirdropServiceProvider;
-use Hammerstone\Torchlight\TorchlightServiceProvider;
+use Torchlight\TorchlightServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 

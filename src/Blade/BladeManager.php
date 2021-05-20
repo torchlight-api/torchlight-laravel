@@ -3,10 +3,10 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight\Blade;
+namespace Torchlight\Blade;
 
-use Hammerstone\Torchlight\Block;
-use Hammerstone\Torchlight\Client;
+use Torchlight\Block;
+use Torchlight\Client;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 

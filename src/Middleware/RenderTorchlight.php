@@ -1,9 +1,9 @@
 <?php
 
-namespace Hammerstone\Torchlight\Middleware;
+namespace Torchlight\Middleware;
 
 use Closure;
-use Hammerstone\Torchlight\Blade\BladeManager;
+use Torchlight\Blade\BladeManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;

@@ -3,11 +3,11 @@
  * @author Aaron Francis <aaron@hammerstone.dev>
  */
 
-namespace Hammerstone\Torchlight;
+namespace Torchlight;
 
-use Hammerstone\Torchlight\Blade\BladeManager;
-use Hammerstone\Torchlight\Blade\CodeComponent;
-use Hammerstone\Torchlight\Commands\Install;
+use Torchlight\Blade\BladeManager;
+use Torchlight\Blade\CodeComponent;
+use Torchlight\Commands\Install;
 use Illuminate\Support\ServiceProvider;
 
 class TorchlightServiceProvider extends ServiceProvider

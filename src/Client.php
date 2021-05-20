@@ -3,11 +3,11 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight;
+namespace Torchlight;
 
-use Hammerstone\Torchlight\Exceptions\ConfigurationException;
-use Hammerstone\Torchlight\Exceptions\RequestException;
-use Hammerstone\Torchlight\Exceptions\TorchlightException;
+use Torchlight\Exceptions\ConfigurationException;
+use Torchlight\Exceptions\RequestException;
+use Torchlight\Exceptions\TorchlightException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;

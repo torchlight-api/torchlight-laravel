@@ -3,10 +3,10 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight\Tests;
+namespace Torchlight\Tests;
 
-use Hammerstone\Torchlight\Block;
-use Hammerstone\Torchlight\Client;
+use Torchlight\Block;
+use Torchlight\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 

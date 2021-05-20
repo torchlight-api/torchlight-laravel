@@ -3,9 +3,9 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight\Tests;
+namespace Torchlight\Tests;
 
-use Hammerstone\Torchlight\TorchlightServiceProvider;
+use Torchlight\TorchlightServiceProvider;
 use Orchestra\Testbench\TestCase;
 
 abstract class BaseTest extends TestCase

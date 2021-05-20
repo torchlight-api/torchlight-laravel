@@ -24,18 +24,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Hammerstone\\Torchlight\\": "src/"
+            "Torchlight\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Hammerstone\\Torchlight\\Tests\\": "tests/"
+            "Torchlight\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Hammerstone\\Torchlight\\TorchlightServiceProvider"
+                "Torchlight\\TorchlightServiceProvider"
             ]
         }
     }

@@ -3,9 +3,9 @@
  * @author Aaron Francis <aaron@hammerstone.dev|https://twitter.com/aarondfrancis>
  */
 
-namespace Hammerstone\Torchlight\Tests;
+namespace Torchlight\Tests;
 
-use Hammerstone\Torchlight\Middleware\RenderTorchlight;
+use Torchlight\Middleware\RenderTorchlight;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
