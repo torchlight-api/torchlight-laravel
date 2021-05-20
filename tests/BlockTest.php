@@ -113,7 +113,20 @@ EOT;
         $block = Block::make('id');
 
         $this->assertEquals('a new default', $block->theme);
+    }
 
+    /** @test */
+    public function can_specify_an_id_generator()
+    {
+        Block::$generateIdsUsing = function () {
+            return 'generated_via_test';
+        };
+
+        $block = Block::make();
+
+        $this->assertEquals('generated_via_test', $block->id());
+
+        Block::$generateIdsUsing = null;
     }
 
 

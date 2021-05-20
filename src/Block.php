@@ -10,6 +10,11 @@ use Illuminate\Support\Str;
 class Block
 {
     /**
+     * @var null|callable
+     */
+    public static $generateIdsUsing;
+
+    /**
      * The language of the code that is being highlighted.
      *
      * @var string
@@ -80,7 +85,7 @@ class Block
     public function __construct($id = null)
     {
         // Generate a unique UUID.
-        $this->id = $id ?? (string)Str::uuid();
+        $this->id = $id ?? $this->generateId();
 
         // Set a default theme.
         $this->theme = config('torchlight.theme');
@@ -92,6 +97,16 @@ class Block
     public function id()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateId()
+    {
+        $id = is_callable(static::$generateIdsUsing) ? call_user_func(static::$generateIdsUsing) : Str::uuid();
+
+        return (string)$id;
     }
 
     /**
