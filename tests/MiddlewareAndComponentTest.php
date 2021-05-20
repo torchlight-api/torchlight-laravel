@@ -61,7 +61,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="" style="">echo &quot;hello world&quot;;</code>',
-            $response->content()
+            rtrim($response->content())
         );
 
         Http::assertSent(function ($request) {
@@ -84,7 +84,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
-            $response->content()
+            rtrim($response->content())
         );
     }
 
@@ -97,7 +97,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight mt-4" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
-            $response->content()
+            rtrim($response->content())
         );
     }
 
@@ -110,7 +110,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight" style="background-color: #292D3E;" x-data="{}">this is the highlighted response from the server</code>',
-            $response->content()
+            rtrim($response->content())
         );
     }
 
