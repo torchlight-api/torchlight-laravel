@@ -16,7 +16,6 @@ class MiddlewareTest extends BaseTest
     {
         config()->set('torchlight.blade_components', true);
         config()->set('torchlight.token', 'token');
-
     }
 
     protected function getView($view)
@@ -30,6 +29,7 @@ class MiddlewareTest extends BaseTest
 
     protected function nullApiResponse()
     {
+        $this->withoutExceptionHandling();
         Http::fake([
             'api.torchlight.dev/*' => Http::response(null, 200),
         ]);
@@ -37,6 +37,7 @@ class MiddlewareTest extends BaseTest
 
     protected function legitApiResponse()
     {
+        $this->withoutExceptionHandling();
         $response = [
             "blocks" => [[
                 "id" => "real_response_id",
@@ -84,6 +85,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
+            // See https://github.com/laravel/framework/pull/35874/files for the rtrim reasoning.
             rtrim($response->content())
         );
     }
