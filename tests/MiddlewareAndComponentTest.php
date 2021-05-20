@@ -147,7 +147,7 @@ class MiddlewareTest extends BaseTest
         $this->getView('contents-via-file.blade.php');
 
         Http::assertSent(function ($request) {
-            return $request['blocks'][0]['code'] === rtrim(file_get_contents(base_path('server.php'), '\n'));
+            return $request['blocks'][0]['code'] === rtrim(file_get_contents(config_path('app.php'), '\n'));
         });
     }
 }
