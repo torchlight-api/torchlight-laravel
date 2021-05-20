@@ -25,21 +25,25 @@ class CodeComponent extends Component
      * @param $language
      * @param null $theme
      * @param null $contents
+     * @param null $torchlightId
      */
-    public function __construct($language, $theme = null, $contents = null)
+    public function __construct($language, $theme = null, $contents = null, $torchlightId = null)
     {
         $this->language = $language;
         $this->theme = $theme;
         $this->contents = $contents;
 
-        $this->block = Block::make()->language($this->language)->theme($this->theme);
+        $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme);
+
     }
 
     public function capture($contents)
     {
         $contents = $contents ?: $this->contents;
 
-        if (is_file(resource_path($contents))) {
+        if (is_file($contents)) {
+            $contents = file_get_contents($contents);
+        } else if (is_file(resource_path($contents))) {
             $contents = file_get_contents(resource_path($contents));
         }
 
