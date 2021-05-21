@@ -9,6 +9,7 @@ use Torchlight\Block;
 use Torchlight\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Torchlight\Torchlight;
 
 class ClientTest extends BaseTest
 {
@@ -67,7 +68,7 @@ class ClientTest extends BaseTest
     /** @test */
     public function it_sends_a_simple_request()
     {
-        (new Client)->highlight(
+        Torchlight::highlight(
             Block::make('id')->language('php')->code('echo "hello world";')
         );
 
@@ -86,7 +87,7 @@ class ClientTest extends BaseTest
     /** @test */
     public function block_theme_overrides_config()
     {
-        (new Client)->highlight(
+        Torchlight::highlight(
             Block::make('id')->language('php')->theme('nord')->code('echo "hello world";')
         );
 
@@ -103,7 +104,7 @@ class ClientTest extends BaseTest
         // Fake HTML, as if it had already been rendered.
         $block->wrapped('<code>echo hello</code>');
 
-        (new Client)->highlight($block);
+        Torchlight::highlight($block);
 
         Http::assertNothingSent();
     }
@@ -117,7 +118,7 @@ class ClientTest extends BaseTest
 
         $shouldSend = Block::make('2')->language('php')->code('echo "hello world";');
 
-        (new Client)->highlight([$shouldNotSend, $shouldSend]);
+        Torchlight::highlight([$shouldNotSend, $shouldSend]);
 
         Http::assertSent(function ($request) {
             // Only 1 block
@@ -134,7 +135,7 @@ class ClientTest extends BaseTest
 
         $this->assertNull($block->wrapped);
 
-        (new Client)->highlight($block);
+        Torchlight::highlight($block);
 
         $this->assertNotNull($block->wrapped);
     }
@@ -160,13 +161,11 @@ class ClientTest extends BaseTest
     {
         $block = Block::make('fake_id')->language('php')->code('echo "hello world";');
 
-        $client = new Client;
-
-        $client->highlight($block);
-        $client->highlight($block);
-        $client->highlight($block);
-        $client->highlight($block);
-        $client->highlight($block);
+        Torchlight::highlight($block);
+        Torchlight::highlight($block);
+        Torchlight::highlight($block);
+        Torchlight::highlight($block);
+        Torchlight::highlight($block);
 
         // One request to set the cache, none after that.
         Http::assertSentCount(1);
@@ -177,9 +176,7 @@ class ClientTest extends BaseTest
     {
         $block = Block::make('unknown_id')->language('php')->code('echo "hello world";');
 
-        $client = new Client;
-
-        $client->highlight($block);
+        Torchlight::highlight($block);
 
         $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
         $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);

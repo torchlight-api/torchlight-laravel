@@ -44,7 +44,7 @@ class Client
     {
         $blocks = $this->collectionOfBlocks($blocks);
 
-        $host = config('torchlight.host', 'https://api.torchlight.dev');
+        $host = Torchlight::config('host', 'https://api.torchlight.dev');
 
         $response = Http::timeout(5)
             ->withToken($this->getToken())
@@ -92,7 +92,7 @@ class Client
 
     protected function getToken()
     {
-        $token = config('torchlight.token');
+        $token = Torchlight::config('token');
 
         if (!$token) {
             $this->throwUnlessProduction(
@@ -113,17 +113,6 @@ class Client
     protected function throwUnlessProduction($exception)
     {
         throw_unless(app()->environment('production'), $exception);
-    }
-
-    public function cache()
-    {
-        $store = config('torchlight.cache');
-
-        if ($store === null) {
-            $store = config('cache.default');
-        }
-
-        return Cache::store($store);
     }
 
     public function cachePrefix()
@@ -162,7 +151,7 @@ class Client
             }
 
             if (count($value)) {
-                $this->cache()->put($this->cacheKey($block), $value, now()->addDays(7));
+                Torchlight::cache()->put($this->cacheKey($block), $value, now()->addDays(7));
             }
         });
     }
@@ -172,7 +161,7 @@ class Client
         $keys = $this->applyDirectlyFromResponse();
 
         $blocks->each(function (Block $block) use ($keys) {
-            if (!$cached = $this->cache()->get($this->cacheKey($block))) {
+            if (!$cached = Torchlight::cache()->get($this->cacheKey($block))) {
                 return;
             }
 

@@ -14,6 +14,7 @@
         "illuminate/support": "^7.26.0|^8.0",
         "illuminate/console": "^7.26.0|^8.0",
         "illuminate/http": "^7.26.0|^8.0",
+        "illuminate/cache": "^7.26.0|^8.0",
         "guzzlehttp/guzzle": "^7.2",
         "ramsey/uuid": "^3.7|^4.0"
     },

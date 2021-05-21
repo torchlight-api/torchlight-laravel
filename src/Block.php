@@ -88,7 +88,7 @@ class Block
         $this->id = $id ?? $this->generateId();
 
         // Set a default theme.
-        $this->theme = config('torchlight.theme');
+        $this->theme = Torchlight::config('theme');
     }
 
     /**
@@ -114,7 +114,7 @@ class Block
      */
     public function hash()
     {
-        return md5($this->language . $this->theme . $this->code . config('torchlight.bust'));
+        return md5($this->language . $this->theme . $this->code . Torchlight::config('bust'));
     }
 
     /**
