@@ -5,10 +5,10 @@
 
 namespace Torchlight\Tests;
 
-use Torchlight\Middleware\RenderTorchlight;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Torchlight\Middleware\RenderTorchlight;
 
 class MiddlewareTest extends BaseTest
 {
@@ -39,11 +39,11 @@ class MiddlewareTest extends BaseTest
     {
         $this->withoutExceptionHandling();
         $response = [
-            "blocks" => [[
-                "id" => "real_response_id",
-                "classes" => "torchlight",
-                "styles" => "background-color: #292D3E;",
-                "highlighted" => "this is the highlighted response from the server",
+            'blocks' => [[
+                'id' => 'real_response_id',
+                'classes' => 'torchlight',
+                'styles' => 'background-color: #292D3E;',
+                'highlighted' => 'this is the highlighted response from the server',
             ]]
         ];
 
@@ -51,7 +51,6 @@ class MiddlewareTest extends BaseTest
             'api.torchlight.dev/*' => Http::response($response, 200),
         ]);
     }
-
 
     /** @test */
     public function it_sends_a_simple_request_with_no_response()
@@ -67,12 +66,12 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                    "id" => "real_response_id",
-                    "hash" => "e99681f5450cbaf3774adc5eb74d637f",
-                    "language" => "php",
-                    "theme" => "material-theme-palenight",
-                    "code" => "echo \"hello world\";",
-                ];
+                'id' => 'real_response_id',
+                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                'language' => 'php',
+                'theme' => 'material-theme-palenight',
+                'code' => 'echo "hello world";',
+            ];
         });
     }
 

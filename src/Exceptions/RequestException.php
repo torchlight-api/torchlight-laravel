@@ -5,8 +5,6 @@
 
 namespace Torchlight\Exceptions;
 
-
 class RequestException extends TorchlightException
 {
-
 }

@@ -5,9 +5,9 @@
 
 namespace Torchlight;
 
+use Illuminate\Support\ServiceProvider;
 use Torchlight\Blade\CodeComponent;
 use Torchlight\Commands\Install;
-use Illuminate\Support\ServiceProvider;
 
 class TorchlightServiceProvider extends ServiceProvider
 {
@@ -36,5 +36,4 @@ class TorchlightServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/torchlight.php', 'torchlight');
     }
-
 }

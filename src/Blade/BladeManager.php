@@ -5,10 +5,9 @@
 
 namespace Torchlight\Blade;
 
+use Illuminate\Http\Response;
 use Torchlight\Block;
 use Torchlight\Client;
-use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 
 class BladeManager
 {

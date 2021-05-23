@@ -6,13 +6,9 @@
 namespace Torchlight\Tests;
 
 use Torchlight\Block;
-use Torchlight\Client;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class BlockTest extends BaseTest
 {
-
     /** @test */
     public function it_dedents_code()
     {
@@ -128,6 +124,4 @@ EOT;
 
         Block::$generateIdsUsing = null;
     }
-
-
 }

@@ -5,9 +5,8 @@
 
 namespace Torchlight\Blade;
 
-use Torchlight\Block;
 use Illuminate\View\Component;
-use Torchlight\Blade\BladeManager;
+use Torchlight\Block;
 
 class CodeComponent extends Component
 {
@@ -34,7 +33,6 @@ class CodeComponent extends Component
         $this->contents = $contents;
 
         $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme);
-
     }
 
     public function capture($contents)
@@ -43,7 +41,7 @@ class CodeComponent extends Component
 
         if (is_file($contents)) {
             $contents = file_get_contents($contents);
-        } else if (is_file(resource_path($contents))) {
+        } elseif (is_file(resource_path($contents))) {
             $contents = file_get_contents(resource_path($contents));
         }
 
@@ -69,6 +67,5 @@ class CodeComponent extends Component
         ])
     }}><?php ob_start(); ?>{{ $slot }}<?php $capture(ob_get_clean()) ?>{{ $block->placeholder() }}</code>
 EOT;
-
     }
 }

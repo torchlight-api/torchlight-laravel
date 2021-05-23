@@ -5,10 +5,10 @@
 
 namespace Torchlight\Tests;
 
-use Torchlight\Block;
-use Torchlight\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Torchlight\Block;
+use Torchlight\Client;
 use Torchlight\Torchlight;
 
 class ClientTest extends BaseTest
@@ -45,18 +45,18 @@ class ClientTest extends BaseTest
     protected function setUpHttpFake()
     {
         $response = [
-            "duration" => 118,
-            "engine" => 1,
-            "blocks" => [[
-                "id" => "real_response_id",
-                "hash" => "3cb41f9d2e180f47dba1a2e123692f74",
-                "language" => "php",
-                "theme" => "material",
-                "classes" => "torchlight",
-                "styles" => "background-color: #292D3E; --theme-selection-background: #00000080;",
-                "wrapped" => "<pre><code class='torchlight' style='background-color: #292D3E; --theme-selection-background: #00000080;'><div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div></code></pre>",
+            'duration' => 118,
+            'engine' => 1,
+            'blocks' => [[
+                'id' => 'real_response_id',
+                'hash' => '3cb41f9d2e180f47dba1a2e123692f74',
+                'language' => 'php',
+                'theme' => 'material',
+                'classes' => 'torchlight',
+                'styles' => 'background-color: #292D3E; --theme-selection-background: #00000080;',
+                'wrapped' => "<pre><code class='torchlight' style='background-color: #292D3E; --theme-selection-background: #00000080;'><div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div></code></pre>",
 
-                "highlighted" => "<div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div>",
+                'highlighted' => "<div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div>",
             ]]
         ];
 
@@ -75,11 +75,11 @@ class ClientTest extends BaseTest
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization', 'Bearer token')
                 && $request['blocks'] === [[
-                    "id" => "id",
-                    "hash" => "49c75d827bf95472ac155c6b6cc42aaf",
-                    "language" => "php",
-                    "theme" => "material",
-                    "code" => 'echo "hello world";',
+                    'id' => 'id',
+                    'hash' => '49c75d827bf95472ac155c6b6cc42aaf',
+                    'language' => 'php',
+                    'theme' => 'material',
+                    'code' => 'echo "hello world";',
                 ]];
         });
     }
@@ -92,7 +92,7 @@ class ClientTest extends BaseTest
         );
 
         Http::assertSent(function ($request) {
-            return $request['blocks'][0]['theme'] === "nord";
+            return $request['blocks'][0]['theme'] === 'nord';
         });
     }
 
@@ -181,5 +181,4 @@ class ClientTest extends BaseTest
         $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
         $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
     }
-
 }

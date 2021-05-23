@@ -3,10 +3,10 @@
 namespace Torchlight\Middleware;
 
 use Closure;
-use Torchlight\Blade\BladeManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Torchlight\Blade\BladeManager;
 
 class RenderTorchlight
 {

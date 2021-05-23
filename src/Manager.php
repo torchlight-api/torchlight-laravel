@@ -7,9 +7,9 @@ namespace Torchlight;
 
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Facades\Cache;
 
 class Manager
 {
@@ -112,5 +112,4 @@ class Manager
         // If the config value is null, the default cache will be used.
         return Cache::store($this->config('cache'));
     }
-
 }

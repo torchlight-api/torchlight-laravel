@@ -5,10 +5,9 @@
 
 namespace Torchlight\Commands;
 
-use Hammerstone\Airdrop\AirdropServiceProvider;
-use Torchlight\TorchlightServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Torchlight\TorchlightServiceProvider;
 
 class Install extends Command
 {
@@ -38,11 +37,10 @@ class Install extends Command
      */
     public function handle()
     {
-        Artisan::call("vendor:publish", [
+        Artisan::call('vendor:publish', [
             '--provider' => TorchlightServiceProvider::class
         ]);
 
         $this->info('Config file published!');
     }
-
 }

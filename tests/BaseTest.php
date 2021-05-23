@@ -5,8 +5,8 @@
 
 namespace Torchlight\Tests;
 
-use Torchlight\TorchlightServiceProvider;
 use Orchestra\Testbench\TestCase;
+use Torchlight\TorchlightServiceProvider;
 
 abstract class BaseTest extends TestCase
 {

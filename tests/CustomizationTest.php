@@ -60,5 +60,4 @@ class CustomizationTest extends BaseTest
         $this->assertFalse($newStore->has('original_key'));
         $this->assertTrue($newStore->has('new_key'));
     }
-
 }

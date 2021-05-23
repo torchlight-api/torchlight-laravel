@@ -5,14 +5,13 @@
 
 namespace Torchlight;
 
-use Torchlight\Exceptions\ConfigurationException;
-use Torchlight\Exceptions\RequestException;
-use Torchlight\Exceptions\TorchlightException;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Torchlight\Exceptions\ConfigurationException;
+use Torchlight\Exceptions\RequestException;
+use Torchlight\Exceptions\TorchlightException;
 
 class Client
 {
@@ -141,7 +140,7 @@ class Client
     {
         $keys = $this->applyDirectlyFromResponse();
 
-        $blocks->only($ids)->each(function (Block $block) use ($ids, $keys) {
+        $blocks->only($ids)->each(function (Block $block) use ($keys) {
             $value = [];
 
             foreach ($keys as $key) {
@@ -196,6 +195,6 @@ class Client
      */
     protected function defaultWrapped(Block $block)
     {
-        return "<pre><code class='torchlight'>" . $this->defaultHighlighted($block) . "</code></pre>";
+        return "<pre><code class='torchlight'>" . $this->defaultHighlighted($block) . '</code></pre>';
     }
 }

@@ -7,5 +7,4 @@ namespace Torchlight\Exceptions;
 
 class TorchlightException extends \Exception
 {
-
 }
