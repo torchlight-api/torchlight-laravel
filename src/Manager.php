@@ -7,6 +7,7 @@ namespace Torchlight;
 
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -111,5 +112,18 @@ class Manager
         // If the developer has requested a particular store, we'll use it.
         // If the config value is null, the default cache will be used.
         return Cache::store($this->config('cache'));
+    }
+
+    /**
+     * Return all the Torchlight IDs in a given string.
+     *
+     * @param string $content
+     * @return array
+     */
+    public function findTorchlightIds($content)
+    {
+        preg_match_all('/__torchlight-block-\[(.+?)\]/', $content, $matches);
+
+        return array_values(array_unique(Arr::get($matches, 1, [])));
     }
 }

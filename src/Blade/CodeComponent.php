@@ -41,7 +41,7 @@ class CodeComponent extends Component
 
         if (is_file($contents)) {
             $contents = file_get_contents($contents);
-        } elseif (is_file(resource_path($contents))) {
+        } elseif (is_callable('resource_path') && is_file(resource_path($contents))) {
             $contents = file_get_contents(resource_path($contents));
         }
 

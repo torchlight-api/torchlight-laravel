@@ -6,8 +6,10 @@
 namespace Torchlight\Blade;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Torchlight\Block;
 use Torchlight\Client;
+use Torchlight\Torchlight;
 
 class BladeManager
 {
@@ -15,9 +17,19 @@ class BladeManager
 
     public static function registerBlock(Block $block)
     {
-        static::$blocks[] = $block;
+        static::$blocks[$block->id()] = $block;
     }
 
+    public static function getBlocks()
+    {
+        return static::$blocks;
+    }
+
+    public static function clearBlocks()
+    {
+        static::$blocks = [];
+    }
+    
     public static function renderResponse(Response $response)
     {
         // Bail early if there are no blocks registered.
@@ -37,23 +49,24 @@ class BladeManager
             return $content;
         }
 
-        $blocks = (new Client)->highlight(static::$blocks);
+        Torchlight::highlight(static::$blocks);
 
-        static::$blocks = [];
+        $ids = Torchlight::findTorchlightIds($content);
 
-        foreach ($blocks as $block) {
-            $swap = [
-                $block->placeholder() => $block->highlighted,
-                $block->placeholder('classes') => $block->classes,
-                $block->placeholder('styles') => $block->styles,
-            ];
+        $swap = [];
 
-            foreach ($swap as $search => $replace) {
-                // Substitute all the placeholders that we left with the highlighted html.
-                $content = str_replace($search, $replace, $content);
+        foreach ($ids as $id) {
+            /** @var Block $block */
+            if (!$block = Arr::get(static::$blocks, $id)) {
+                continue;
             }
+
+            // Swap out all the placeholders that we left.
+            $swap[$block->placeholder()] = $block->highlighted;
+            $swap[$block->placeholder('classes')] = $block->classes;
+            $swap[$block->placeholder('styles')] = $block->styles;
         }
 
-        return $content;
+        return str_replace(array_keys($swap), array_values($swap), $content);
     }
 }

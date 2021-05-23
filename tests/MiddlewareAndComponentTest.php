@@ -66,12 +66,12 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                'id' => 'real_response_id',
-                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
-                'language' => 'php',
-                'theme' => 'material-theme-palenight',
-                'code' => 'echo "hello world";',
-            ];
+                    'id' => 'real_response_id',
+                    'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                    'language' => 'php',
+                    'theme' => 'material-theme-palenight',
+                    'code' => 'echo "hello world";',
+                ];
         });
     }
 
@@ -150,5 +150,38 @@ class MiddlewareTest extends BaseTest
         Http::assertSent(function ($request) {
             return $request['blocks'][0]['code'] === rtrim(file_get_contents(config_path('app.php'), '\n'));
         });
+    }
+
+    /** @test */
+    public function two_components_work()
+    {
+        $this->withoutExceptionHandling();
+        $response = [
+            'blocks' => [[
+                'id' => 'id1',
+                'classes' => 'torchlight1',
+                'styles' => 'background-color: #111111;',
+                'highlighted' => 'response 1',
+            ], [
+                'id' => 'id2',
+                'classes' => 'torchlight2',
+                'styles' => 'background-color: #222222;',
+                'highlighted' => 'response 2',
+            ]]
+        ];
+
+        Http::fake([
+            'api.torchlight.dev/*' => Http::response($response, 200),
+        ]);
+
+        $response = $this->getView('two-simple-php-hello-world.blade.php');
+
+        $expected = <<<EOT
+<code class="torchlight1" style="background-color: #111111;">response 1</code>
+<code class="torchlight2" style="background-color: #222222;">response 2</code>
+EOT;
+
+
+        $this->assertEquals($expected, rtrim($response->content()));
     }
 }

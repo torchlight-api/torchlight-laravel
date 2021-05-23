@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `Torchlight::findTorchlightIds` method to regex a string and return all Torchlight placeholders.
+- `BladeManager::getBlocks`
+- `BladeManager::clearBlocks`
+
+### Changed
+- Added square brackets around the Torchlight ID in the Block placeholder.
+- The BladeManager no longer clears the blocks while rendering. Needed for Jigsaw.
+
 ## 0.3.0 - 2021-05-22
 
 - Add `Torchlight` facade
