@@ -60,4 +60,18 @@ class CustomizationTest extends BaseTest
         $this->assertFalse($newStore->has('original_key'));
         $this->assertTrue($newStore->has('new_key'));
     }
+
+    /** @test */
+    public function environment_can_be_set()
+    {
+        $this->assertEquals('testing', Torchlight::environment());
+
+        Torchlight::overrideEnvironment('production');
+
+        $this->assertEquals('production', Torchlight::environment());
+
+        Torchlight::overrideEnvironment(null);
+
+        $this->assertEquals('testing', Torchlight::environment());
+    }
 }

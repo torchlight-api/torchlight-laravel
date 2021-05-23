@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.4.1 - 2021-05-23
+
+### Added
+- Ability to override the environment.
+
 ## 0.4.0 - 2021-05-23
 
 ### Added

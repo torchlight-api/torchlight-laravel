@@ -111,7 +111,7 @@ class Client
 
     protected function throwUnlessProduction($exception)
     {
-        throw_unless(app()->environment('production'), $exception);
+        throw_unless(Torchlight::environment() === 'production', $exception);
     }
 
     public function cachePrefix()

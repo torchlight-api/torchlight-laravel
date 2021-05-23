@@ -32,6 +32,11 @@ class Manager
     protected $app;
 
     /**
+     * @var null|string
+     */
+    protected $environment;
+
+    /**
      * @param Container $app
      */
     public function __construct(Container $app)
@@ -54,6 +59,22 @@ class Manager
     public function client()
     {
         return $this->app->make(Client::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function environment()
+    {
+        return $this->environment ?? app()->environment();
+    }
+
+    /**
+     * @param string $environment
+     */
+    public function overrideEnvironment($environment = null)
+    {
+        $this->environment = $environment;
     }
 
     /**
