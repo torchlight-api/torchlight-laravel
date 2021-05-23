@@ -127,7 +127,7 @@ class Block
             $extra = "_$extra";
         }
 
-        return "__torchlight-block-{$this->id()}{$extra}__";
+        return "__torchlight-block-[{$this->id()}]{$extra}__";
     }
 
     /**
