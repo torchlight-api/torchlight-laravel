@@ -1,8 +1,14 @@
 {
     "name": "torchlight/torchlight-laravel",
     "description": "A Laravel Client for Torchlight, the syntax highlighting API.",
+    "homepage": "https://torchlight.dev",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "syntax highlighting",
+        "code highlighting",
+        "laravel"
+    ],
     "authors": [
         {
             "name": "Aaron Francis",
