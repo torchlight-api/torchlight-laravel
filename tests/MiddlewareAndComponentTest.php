@@ -66,12 +66,12 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                    'id' => 'real_response_id',
-                    'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
-                    'language' => 'php',
-                    'theme' => 'material-theme-palenight',
-                    'code' => 'echo "hello world";',
-                ];
+                'id' => 'real_response_id',
+                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                'language' => 'php',
+                'theme' => 'material-theme-palenight',
+                'code' => 'echo "hello world";',
+            ];
         });
     }
 
