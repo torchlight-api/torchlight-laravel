@@ -5,14 +5,11 @@
 
 namespace Torchlight\Tests;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Torchlight\Block;
 use Torchlight\Torchlight;
 
 class FindIdsTest extends BaseTest
 {
-
     /** @test */
     public function it_will_find_all_the_ids()
     {
@@ -61,5 +58,4 @@ EOT;
     {
         $this->assertEquals([], Torchlight::findTorchlightIds('not found'));
     }
-
 }

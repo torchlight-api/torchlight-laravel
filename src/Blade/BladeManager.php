@@ -8,7 +8,6 @@ namespace Torchlight\Blade;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Torchlight\Block;
-use Torchlight\Client;
 use Torchlight\Torchlight;
 
 class BladeManager
@@ -29,7 +28,7 @@ class BladeManager
     {
         static::$blocks = [];
     }
-    
+
     public static function renderResponse(Response $response)
     {
         // Bail early if there are no blocks registered.

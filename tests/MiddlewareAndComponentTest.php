@@ -66,12 +66,12 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                    'id' => 'real_response_id',
-                    'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
-                    'language' => 'php',
-                    'theme' => 'material-theme-palenight',
-                    'code' => 'echo "hello world";',
-                ];
+                'id' => 'real_response_id',
+                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                'language' => 'php',
+                'theme' => 'material-theme-palenight',
+                'code' => 'echo "hello world";',
+            ];
         });
     }
 
@@ -180,7 +180,6 @@ class MiddlewareTest extends BaseTest
 <code class="torchlight1" style="background-color: #111111;">response 1</code>
 <code class="torchlight2" style="background-color: #222222;">response 2</code>
 EOT;
-
 
         $this->assertEquals($expected, rtrim($response->content()));
     }
