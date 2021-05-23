@@ -66,12 +66,12 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                'id' => 'real_response_id',
-                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
-                'language' => 'php',
-                'theme' => 'material-theme-palenight',
-                'code' => 'echo "hello world";',
-            ];
+                    'id' => 'real_response_id',
+                    'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                    'language' => 'php',
+                    'theme' => 'material-theme-palenight',
+                    'code' => 'echo "hello world";',
+                ];
         });
     }
 
@@ -181,6 +181,14 @@ class MiddlewareTest extends BaseTest
 <code class="torchlight2" style="background-color: #222222;">response 2</code>
 EOT;
 
-        $this->assertEquals($expected, rtrim($response->content()));
+        // See https://github.com/laravel/framework/pull/35874/files for reasoning.
+        $expected = str_replace("\n", '', $expected);
+
+        // Covering bugfixes from earlier versions of Laravel
+        // https://github.com/laravel/framework/pull/35874/files.
+        $actual = rtrim(str_replace("\n", '', $response->content()));
+        $actual = str_replace('</code>  <code', '</code><code', $actual);
+
+        $this->assertEquals($expected, $actual);
     }
 }
