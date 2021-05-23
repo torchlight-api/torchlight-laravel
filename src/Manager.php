@@ -6,6 +6,7 @@
 namespace Torchlight;
 
 use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Facades\Cache;
@@ -25,6 +26,19 @@ class Manager
     protected $cache;
 
     /**
+     * @var Container
+     */
+    protected $app;
+
+    /**
+     * @param Container $app
+     */
+    public function __construct(Container $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * @param $blocks
      * @return mixed
      */
@@ -38,7 +52,7 @@ class Manager
      */
     public function client()
     {
-        return app(Client::class);
+        return $this->app->make(Client::class);
     }
 
     /**

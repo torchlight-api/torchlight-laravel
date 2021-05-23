@@ -151,7 +151,7 @@ class Client
             }
 
             if (count($value)) {
-                Torchlight::cache()->put($this->cacheKey($block), $value, now()->addDays(7));
+                Torchlight::cache()->put($this->cacheKey($block), $value, $seconds = 7 * 24 * 60 * 60);
             }
         });
     }

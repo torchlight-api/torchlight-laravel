@@ -1,5 +1,5 @@
 {
-    "name": "torchlight/laravel",
+    "name": "torchlight/torchlight-laravel",
     "description": "A Laravel Client for Torchlight, the syntax highlighting API.",
     "type": "library",
     "license": "MIT",
