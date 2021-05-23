@@ -2,8 +2,10 @@
 
 ## Unreleased
 
+## 0.4.0 - 2021-05-23
+
 ### Added
-- `Torchlight::findTorchlightIds` method to regex a string and return all Torchlight placeholders.
+- `Torchlight::findTorchlightIds` method to search a string and return all Torchlight placeholders.
 - `BladeManager::getBlocks`
 - `BladeManager::clearBlocks`
 
