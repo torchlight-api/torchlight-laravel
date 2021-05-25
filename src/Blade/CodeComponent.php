@@ -59,13 +59,15 @@ class CodeComponent extends Component
         // classes and style string. Echo out the slot, but capture it using output
         // buffering. We then pass it through as the contents to highlight, leaving
         // the placeholder so we can replace it later with fully highlighted code.
+        // We have to add the ##PRE## and ##POST## tags to cover a framework bug.
+        // @see BladeManager::renderContent.
         return <<<'EOT'
-<code {{
+##PRE_TL_COMPONENT##<code {{
         $attributes->except('style')->merge([
             'class' => $block->placeholder('classes'),
             'style' => $attributes->get('style') . $block->placeholder('styles')
         ])
-    }}><?php ob_start(); ?>{{ $slot }}<?php $capture(ob_get_clean()) ?>{{ $block->placeholder() }}</code>
+    }}><?php ob_start(); ?>{{ $slot }}<?php $capture(ob_get_clean()) ?>{{ $block->placeholder() }}</code>##POST_TL_COMPONENT##
 EOT;
     }
 }

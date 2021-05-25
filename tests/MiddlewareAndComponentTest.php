@@ -20,6 +20,9 @@ class MiddlewareTest extends BaseTest
 
     protected function getView($view)
     {
+        // When testing multiple versions locally, this helps.
+        $this->artisan('view:clear');
+
         Route::get('/torchlight', function () use ($view) {
             return View::file(__DIR__ . '/Support/' . $view);
         })->middleware(RenderTorchlight::class);
@@ -60,8 +63,8 @@ class MiddlewareTest extends BaseTest
         $response = $this->getView('simple-php-hello-world.blade.php');
 
         $this->assertEquals(
-            '<code class="" style="">echo &quot;hello world&quot;;</code>',
-            rtrim($response->content())
+            '<pre><code class="" style="">echo &quot;hello world&quot;;</code></pre>',
+            $response->content()
         );
 
         Http::assertSent(function ($request) {
@@ -83,9 +86,8 @@ class MiddlewareTest extends BaseTest
         $response = $this->getView('simple-php-hello-world.blade.php');
 
         $this->assertEquals(
-            '<code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
-            // See https://github.com/laravel/framework/pull/35874/files for the rtrim reasoning.
-            rtrim($response->content())
+            '<pre><code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
+            $response->content()
         );
     }
 
@@ -98,7 +100,7 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight mt-4" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
-            rtrim($response->content())
+            $response->content()
         );
     }
 
@@ -111,7 +113,20 @@ class MiddlewareTest extends BaseTest
 
         $this->assertEquals(
             '<code class="torchlight" style="background-color: #292D3E;" x-data="{}">this is the highlighted response from the server</code>',
-            rtrim($response->content())
+            $response->content()
+        );
+    }
+
+    /** @test */
+    public function inline_keeps_its_spaces()
+    {
+        $this->legitApiResponse();
+
+        $response = $this->getView('an-inline-component.blade.php');
+
+        $this->assertEquals(
+            'this is <code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code> inline',
+            $response->content()
         );
     }
 
@@ -177,18 +192,11 @@ class MiddlewareTest extends BaseTest
         $response = $this->getView('two-simple-php-hello-world.blade.php');
 
         $expected = <<<EOT
-<code class="torchlight1" style="background-color: #111111;">response 1</code>
-<code class="torchlight2" style="background-color: #222222;">response 2</code>
+<pre><code class="torchlight1" style="background-color: #111111;">response 1</code></pre>
+
+<pre><code class="torchlight2" style="background-color: #222222;">response 2</code></pre>
 EOT;
 
-        // See https://github.com/laravel/framework/pull/35874/files for reasoning.
-        $expected = str_replace("\n", '', $expected);
-
-        // Covering bugfixes from earlier versions of Laravel
-        // https://github.com/laravel/framework/pull/35874/files.
-        $actual = rtrim(str_replace("\n", '', $response->content()));
-        $actual = str_replace('</code>  <code', '</code><code', $actual);
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $response->content());
     }
 }

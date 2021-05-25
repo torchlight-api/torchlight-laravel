@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.4.2 - 2021-05-24
+
+### Fixed
+- Cover a bug in Laravel pre 8.23.0.
+
 ## 0.4.1 - 2021-05-23
 
 ### Added

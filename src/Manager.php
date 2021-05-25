@@ -70,7 +70,7 @@ class Manager
     }
 
     /**
-     * @param string $environment
+     * @param string|null $environment
      */
     public function overrideEnvironment($environment = null)
     {
