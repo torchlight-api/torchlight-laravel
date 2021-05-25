@@ -20,6 +20,9 @@ class MiddlewareTest extends BaseTest
 
     protected function getView($view)
     {
+        // When testing multiple versions locally, this helps.
+        $this->artisan('view:clear');
+
         Route::get('/torchlight', function () use ($view) {
             return View::file(__DIR__ . '/Support/' . $view);
         })->middleware(RenderTorchlight::class);
@@ -115,6 +118,19 @@ class MiddlewareTest extends BaseTest
     }
 
     /** @test */
+    public function inline_keeps_its_spaces()
+    {
+        $this->legitApiResponse();
+
+        $response = $this->getView('an-inline-component.blade.php');
+
+        $this->assertEquals(
+            'this is <code class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code> inline',
+            $response->content()
+        );
+    }
+
+    /** @test */
     public function language_can_be_set_via_component()
     {
         $this->nullApiResponse();
@@ -176,9 +192,9 @@ class MiddlewareTest extends BaseTest
         $response = $this->getView('two-simple-php-hello-world.blade.php');
 
         $expected = <<<EOT
-<code class="torchlight1" style="background-color: #111111;">response 1</code>
+<pre><code class="torchlight1" style="background-color: #111111;">response 1</code></pre>
 
-<code class="torchlight2" style="background-color: #222222;">response 2</code>
+<pre><code class="torchlight2" style="background-color: #222222;">response 2</code></pre>
 EOT;
 
         $this->assertEquals($expected, $response->content());
