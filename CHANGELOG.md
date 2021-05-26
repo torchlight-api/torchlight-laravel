@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.4.3 - 2021-05-25
+
+### Added
+- `getConfigUsing` now accepts a plain array in addition to a callback.
+
 ## 0.4.2 - 2021-05-24
 
 ### Fixed

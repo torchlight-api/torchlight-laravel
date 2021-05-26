@@ -74,4 +74,17 @@ class CustomizationTest extends BaseTest
 
         $this->assertEquals('testing', Torchlight::environment());
     }
+
+
+    /** @test */
+    public function config_can_be_array()
+    {
+        $this->assertEquals('token from config', Torchlight::config('token'));
+
+        Torchlight::getConfigUsing([
+            'token' => 'plain ol array'
+        ]);
+
+        $this->assertEquals('plain ol array', Torchlight::config('token'));
+    }
 }

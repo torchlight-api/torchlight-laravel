@@ -106,6 +106,12 @@ class Manager
      */
     public function getConfigUsing($callback)
     {
+        if (is_array($callback)) {
+            $callback = function ($key, $default) use ($callback) {
+                return Arr::get($callback, $key, $default);
+            };
+        }
+
         $this->getConfigUsing = $callback;
     }
 
