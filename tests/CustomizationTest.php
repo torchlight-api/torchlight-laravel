@@ -75,7 +75,6 @@ class CustomizationTest extends BaseTest
         $this->assertEquals('testing', Torchlight::environment());
     }
 
-
     /** @test */
     public function config_can_be_array()
     {
