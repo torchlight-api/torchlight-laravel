@@ -5,10 +5,12 @@
 
 namespace Torchlight;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 use Torchlight\Exceptions\ConfigurationException;
 use Torchlight\Exceptions\RequestException;
 use Torchlight\Exceptions\TorchlightException;
@@ -45,12 +47,18 @@ class Client
 
         $host = Torchlight::config('host', 'https://api.torchlight.dev');
 
-        $response = Http::timeout(5)
-            ->withToken($this->getToken())
-            ->post($host . '/highlight', [
-                'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
-            ])
-            ->json();
+        try {
+            $response = Http::timeout(5)
+                ->withToken($this->getToken())
+                ->post($host . '/highlight', [
+                    'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
+                ])
+                ->json();
+        } catch (Throwable $e) {
+            $response = [
+                'error' => $e->getMessage()
+            ];
+        }
 
         $this->potentiallyThrowRequestException($response);
 
