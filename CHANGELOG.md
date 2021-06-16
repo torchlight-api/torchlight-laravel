@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.4.4 - 2021-05-25
+
+### Fixed
+- Catch `ConnectionException`s in addition to exceptions from the Torchlight API.
+
 ## 0.4.3 - 2021-05-25
 
 ### Added
