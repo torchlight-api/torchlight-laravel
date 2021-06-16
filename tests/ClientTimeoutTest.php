@@ -5,10 +5,7 @@
 
 namespace Torchlight\Tests;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Torchlight\Block;
-use Torchlight\Client;
 use Torchlight\Exceptions\RequestException;
 use Torchlight\Torchlight;
 
@@ -23,7 +20,6 @@ class ClientTimeoutTest extends BaseTest
             'host' => 'https://nonexistent.torchlight.dev'
         ]);
     }
-
 
     /** @test */
     public function it_catches_the_connect_exception()

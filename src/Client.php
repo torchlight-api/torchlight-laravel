@@ -5,7 +5,6 @@
 
 namespace Torchlight;
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
