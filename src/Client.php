@@ -5,9 +5,9 @@
 
 namespace Torchlight;
 
+use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 use Torchlight\Exceptions\ConfigurationException;
@@ -42,26 +42,35 @@ class Client
 
     protected function request(Collection $blocks)
     {
-        $blocks = $this->collectionOfBlocks($blocks);
-
-        $host = Torchlight::config('host', 'https://api.torchlight.dev');
+        $error = false;
 
         try {
-            $response = Http::timeout(5)
-                ->withToken($this->getToken())
-                ->post($host . '/highlight', [
-                    'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
-                ])
-                ->json();
+            $response = $this->collectionOfBlocks($blocks)
+                ->chunk(Torchlight::config('request_chunk_size', 15))
+                ->pipe(function ($chunks) {
+                    return collect($this->requestChunks($chunks));
+                })
+                ->map(function ($response) use (&$error) {
+                    if ($response instanceof Throwable) {
+                        $error = $response;
+
+                        return [];
+                    }
+
+                    if ($response->failed()) {
+                        $error = $response->toException();
+
+                        return [];
+                    }
+
+                    return Arr::get($response->json(), 'blocks', []);
+                })
+                ->flatten(1);
         } catch (Throwable $e) {
-            $response = [
-                'error' => $e->getMessage()
-            ];
+            $this->throwUnlessProduction($e);
         }
 
-        $this->potentiallyThrowRequestException($response);
-
-        $response = collect(Arr::get($response, 'blocks', []))->keyBy('id');
+        $response = collect($response)->keyBy('id');
 
         $blocks->each(function (Block $block) use ($response) {
             $blockFromResponse = Arr::get($response, "{$block->id()}", []);
@@ -84,7 +93,26 @@ class Client
         // Only store the ones we got back from the API.
         $this->setCacheFromBlocks($blocks, $response->keys());
 
+        $this->potentiallyThrowRequestException($error);
+
         return $blocks;
+    }
+
+    protected function requestChunks($chunks)
+    {
+        return Http::pool(function (Pool $pool) use ($chunks) {
+            $host = Torchlight::config('host', 'https://api.torchlight.dev');
+            $timeout = Torchlight::config('request_timeout', 5);
+
+            $chunks->each(function ($blocks) use ($pool, $host, $timeout) {
+                $pool->timeout($timeout)
+                    ->baseUrl($host)
+                    ->withToken($this->getToken())
+                    ->post('highlight', [
+                        'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
+                    ]);
+            });
+        });
     }
 
     protected function collectionOfBlocks($blocks)
@@ -109,10 +137,10 @@ class Client
         return $token;
     }
 
-    protected function potentiallyThrowRequestException($response)
+    protected function potentiallyThrowRequestException($exception)
     {
-        if ($error = Arr::get($response, 'error')) {
-            $this->throwUnlessProduction(new RequestException($error));
+        if ($exception) {
+            $this->throwUnlessProduction(new RequestException($exception->getMessage()));
         }
     }
 

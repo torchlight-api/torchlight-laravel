@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Torchlight\Middleware\RenderTorchlight;
 
-class MiddlewareTest extends BaseTest
+class MiddlewareAndComponentTest extends BaseTest
 {
     public function getEnvironmentSetUp($app)
     {
@@ -20,7 +20,7 @@ class MiddlewareTest extends BaseTest
 
     protected function getView($view)
     {
-        // When testing multiple versions locally, this helps.
+        // This helps when testing multiple Laravel versions locally.
         $this->artisan('view:clear');
 
         Route::get('/torchlight', function () use ($view) {
@@ -30,35 +30,10 @@ class MiddlewareTest extends BaseTest
         return $this->call('GET', 'torchlight');
     }
 
-    protected function nullApiResponse()
-    {
-        $this->withoutExceptionHandling();
-        Http::fake([
-            'api.torchlight.dev/*' => Http::response(null, 200),
-        ]);
-    }
-
-    protected function legitApiResponse()
-    {
-        $this->withoutExceptionHandling();
-        $response = [
-            'blocks' => [[
-                'id' => 'real_response_id',
-                'classes' => 'torchlight',
-                'styles' => 'background-color: #292D3E;',
-                'highlighted' => 'this is the highlighted response from the server',
-            ]]
-        ];
-
-        Http::fake([
-            'api.torchlight.dev/*' => Http::response($response, 200),
-        ]);
-    }
-
     /** @test */
     public function it_sends_a_simple_request_with_no_response()
     {
-        $this->nullApiResponse();
+        $this->fakeNullResponse('component');
 
         $response = $this->getView('simple-php-hello-world.blade.php');
 
@@ -69,19 +44,23 @@ class MiddlewareTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
-                'id' => 'real_response_id',
-                'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
-                'language' => 'php',
-                'theme' => 'material-theme-palenight',
-                'code' => 'echo "hello world";',
-            ];
+                    'id' => 'component',
+                    'hash' => 'e99681f5450cbaf3774adc5eb74d637f',
+                    'language' => 'php',
+                    'theme' => 'material-theme-palenight',
+                    'code' => 'echo "hello world";',
+                ];
         });
     }
 
     /** @test */
     public function it_sends_a_simple_request_with_highlighted_response()
     {
-        $this->legitApiResponse();
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'this is the highlighted response from the server',
+        ]);
 
         $response = $this->getView('simple-php-hello-world.blade.php');
 
@@ -94,7 +73,11 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function classes_get_merged()
     {
-        $this->legitApiResponse();
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'this is the highlighted response from the server',
+        ]);
 
         $response = $this->getView('simple-php-hello-world-with-classes.blade.php');
 
@@ -107,7 +90,11 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function attributes_are_preserved()
     {
-        $this->legitApiResponse();
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'this is the highlighted response from the server',
+        ]);
 
         $response = $this->getView('simple-php-hello-world-with-attributes.blade.php');
 
@@ -120,7 +107,11 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function inline_keeps_its_spaces()
     {
-        $this->legitApiResponse();
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'this is the highlighted response from the server',
+        ]);
 
         $response = $this->getView('an-inline-component.blade.php');
 
@@ -133,7 +124,7 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function language_can_be_set_via_component()
     {
-        $this->nullApiResponse();
+        $this->fakeNullResponse('component');
 
         $this->getView('simple-js-hello-world.blade.php');
 
@@ -145,7 +136,7 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function theme_can_be_set_via_component()
     {
-        $this->nullApiResponse();
+        $this->fakeNullResponse('component');
 
         $this->getView('simple-php-hello-world-new-theme.blade.php');
 
@@ -157,8 +148,7 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function code_contents_can_be_a_file()
     {
-        $this->withoutExceptionHandling();
-        $this->nullApiResponse();
+        $this->fakeNullResponse('component');
 
         $this->getView('contents-via-file.blade.php');
 
@@ -170,23 +160,18 @@ class MiddlewareTest extends BaseTest
     /** @test */
     public function two_components_work()
     {
-        $this->withoutExceptionHandling();
-        $response = [
-            'blocks' => [[
-                'id' => 'id1',
-                'classes' => 'torchlight1',
-                'styles' => 'background-color: #111111;',
-                'highlighted' => 'response 1',
-            ], [
-                'id' => 'id2',
-                'classes' => 'torchlight2',
-                'styles' => 'background-color: #222222;',
-                'highlighted' => 'response 2',
-            ]]
-        ];
+        $this->fakeSuccessfulResponse('component1', [
+            'id' => 'component1',
+            'classes' => 'torchlight1',
+            'styles' => 'background-color: #111111;',
+            'highlighted' => 'response 1',
+        ]);
 
-        Http::fake([
-            'api.torchlight.dev/*' => Http::response($response, 200),
+        $this->fakeSuccessfulResponse('component2', [
+            'id' => 'component2',
+            'classes' => 'torchlight2',
+            'styles' => 'background-color: #222222;',
+            'highlighted' => 'response 2',
         ]);
 
         $response = $this->getView('two-simple-php-hello-world.blade.php');

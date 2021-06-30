@@ -5,10 +5,15 @@
 
 namespace Torchlight\Tests;
 
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\TransferException;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Torchlight\Block;
 use Torchlight\Client;
+use Torchlight\Exceptions\RequestException;
 use Torchlight\Torchlight;
 
 class ClientTest extends BaseTest
@@ -16,7 +21,7 @@ class ClientTest extends BaseTest
     public function getEnvironmentSetUp($app)
     {
         $this->setUpCache();
-        $this->setUpHttpFake();
+        $this->fakeApi();
         $this->setUpTorchlight();
     }
 
@@ -42,32 +47,11 @@ class ClientTest extends BaseTest
         ]);
     }
 
-    protected function setUpHttpFake()
-    {
-        $response = [
-            'duration' => 118,
-            'engine' => 1,
-            'blocks' => [[
-                'id' => 'real_response_id',
-                'hash' => '3cb41f9d2e180f47dba1a2e123692f74',
-                'language' => 'php',
-                'theme' => 'material',
-                'classes' => 'torchlight',
-                'styles' => 'background-color: #292D3E; --theme-selection-background: #00000080;',
-                'wrapped' => "<pre><code class='torchlight' style='background-color: #292D3E; --theme-selection-background: #00000080;'><div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div></code></pre>",
-
-                'highlighted' => "<div class='line'><span style=\"color:#3A3F58; text-align: right; user-select: none;\" class=\"line-number\">1</span><span style=\"color: #82AAFF\">echo</span><span style=\"color: #A6ACCD\"> </span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #C3E88D\">hello world</span><span style=\"color: #89DDFF\">&quot;</span><span style=\"color: #89DDFF\">;</span></div>",
-            ]]
-        ];
-
-        Http::fake([
-            'api.torchlight.dev/*' => Http::response($response, 200),
-        ]);
-    }
-
     /** @test */
     public function it_sends_a_simple_request()
     {
+        $this->fakeSuccessfulResponse('id');
+
         Torchlight::highlight(
             Block::make('id')->language('php')->code('echo "hello world";')
         );
@@ -87,6 +71,8 @@ class ClientTest extends BaseTest
     /** @test */
     public function block_theme_overrides_config()
     {
+        $this->fakeSuccessfulResponse('id');
+
         Torchlight::highlight(
             Block::make('id')->language('php')->theme('nord')->code('echo "hello world";')
         );
@@ -112,13 +98,19 @@ class ClientTest extends BaseTest
     /** @test */
     public function only_blocks_without_html_get_sent()
     {
+        $this->fakeSuccessfulResponse('1');
+        $this->fakeSuccessfulResponse('2');
+
         $shouldNotSend = Block::make('1')->language('php')->code('echo "hello world";');
         // Fake HTML, as if it had already been rendered.
         $shouldNotSend->wrapped('<code>echo hello</code>');
 
         $shouldSend = Block::make('2')->language('php')->code('echo "hello world";');
 
-        Torchlight::highlight([$shouldNotSend, $shouldSend]);
+        Torchlight::highlight([
+            $shouldNotSend,
+            $shouldSend
+        ]);
 
         Http::assertSent(function ($request) {
             // Only 1 block
@@ -131,7 +123,9 @@ class ClientTest extends BaseTest
     /** @test */
     public function a_block_gets_its_html_set()
     {
-        $block = Block::make('real_response_id')->language('php')->code('echo "hello world";');
+        $this->fakeSuccessfulResponse('success');
+
+        $block = Block::make('success')->language('php')->code('echo "hello world";');
 
         $this->assertNull($block->wrapped);
 
@@ -143,7 +137,9 @@ class ClientTest extends BaseTest
     /** @test */
     public function cache_gets_set()
     {
-        $block = Block::make('real_response_id')->language('php')->code('echo "hello world";');
+        $this->fakeSuccessfulResponse('success');
+
+        $block = Block::make('success')->language('php')->code('echo "hello world";');
 
         $client = new Client;
 
@@ -159,13 +155,15 @@ class ClientTest extends BaseTest
     /** @test */
     public function already_cached_doesnt_get_sent_again()
     {
-        $block = Block::make('fake_id')->language('php')->code('echo "hello world";');
+        $this->fakeSuccessfulResponse('success');
 
-        Torchlight::highlight($block);
-        Torchlight::highlight($block);
-        Torchlight::highlight($block);
-        Torchlight::highlight($block);
-        Torchlight::highlight($block);
+        $block = Block::make('success')->language('php')->code('echo "hello world";');
+
+        Torchlight::highlight(clone $block);
+        Torchlight::highlight(clone $block);
+        Torchlight::highlight(clone $block);
+        Torchlight::highlight(clone $block);
+        Torchlight::highlight(clone $block);
 
         // One request to set the cache, none after that.
         Http::assertSentCount(1);
@@ -174,11 +172,90 @@ class ClientTest extends BaseTest
     /** @test */
     public function if_theres_no_response_then_it_sets_a_default()
     {
+        $this->fakeNullResponse('unknown_id');
+
         $block = Block::make('unknown_id')->language('php')->code('echo "hello world";');
 
         Torchlight::highlight($block);
 
         $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
         $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
+    }
+
+    /** @test */
+    public function a_500_error_returns_a_default_in_production()
+    {
+        Torchlight::overrideEnvironment('production');
+
+        $this->addFake('unknown_id', Http::response(null, 500));
+
+        $block = Block::make('unknown_id')->language('php')->code('echo "hello world";');
+
+        Torchlight::highlight($block);
+
+        $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
+        $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
+    }
+
+    /** @test */
+    public function multiple_requests_get_chunked()
+    {
+        config()->set('torchlight.request_chunk_size', 2);
+
+        $this->fakeSuccessfulResponse('1');
+        $this->fakeSuccessfulResponse('2');
+        $this->fakeSuccessfulResponse('3');
+        $this->fakeSuccessfulResponse('4');
+
+        Torchlight::highlight([
+            Block::make('1')->language('php')->code('echo "hello world 1";'),
+            Block::make('2')->language('php')->code('echo "hello world 2";'),
+            Block::make('3')->language('php')->code('echo "hello world 3";'),
+            Block::make('4')->language('php')->code('echo "hello world 4";'),
+        ]);
+
+        // All these should be cached.
+        Torchlight::highlight([
+            Block::make('1')->language('php')->code('echo "hello world 1";'),
+            Block::make('2')->language('php')->code('echo "hello world 2";'),
+            Block::make('3')->language('php')->code('echo "hello world 3";'),
+            Block::make('4')->language('php')->code('echo "hello world 4";'),
+        ]);
+
+        // 2 chunks sent, second set was cached.
+        Http::assertSentCount(2);
+    }
+
+    /** @test */
+    public function blocks_still_get_cached_if_one_request_fails()
+    {
+        config()->set('torchlight.request_chunk_size', 1);
+
+        $this->fakeSuccessfulResponse('1');
+        $this->fakeSuccessfulResponse('2');
+        $this->fakeSuccessfulResponse('3');
+
+        $this->fakeTimeout('4');
+
+        try {
+            Torchlight::highlight([
+                $block1 = Block::make('1')->language('php')->code('echo "hello world 1";'),
+                $block2 = Block::make('2')->language('php')->code('echo "hello world 2";'),
+                $block3 = Block::make('3')->language('php')->code('echo "hello world 3";'),
+                $block4 = Block::make('4')->language('php')->code('echo "hello world 4";'),
+            ]);
+        } catch (RequestException $exception) {
+
+        }
+
+        // Exception should have been thrown.
+        $this->assertInstanceOf(RequestException::class, $exception);
+
+        $client = new Client;
+
+        $this->assertNotNull(Cache::get($client->cacheKey($block1)));
+        $this->assertNotNull(Cache::get($client->cacheKey($block2)));
+        $this->assertNotNull(Cache::get($client->cacheKey($block3)));
+
     }
 }
