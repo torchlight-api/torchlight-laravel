@@ -5,10 +5,7 @@
 
 namespace Torchlight\Tests;
 
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\TransferException;
 use Illuminate\Http\Client\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Torchlight\Block;
@@ -245,7 +242,6 @@ class ClientTest extends BaseTest
                 $block4 = Block::make('4')->language('php')->code('echo "hello world 4";'),
             ]);
         } catch (RequestException $exception) {
-
         }
 
         // Exception should have been thrown.
@@ -256,6 +252,5 @@ class ClientTest extends BaseTest
         $this->assertNotNull(Cache::get($client->cacheKey($block1)));
         $this->assertNotNull(Cache::get($client->cacheKey($block2)));
         $this->assertNotNull(Cache::get($client->cacheKey($block3)));
-
     }
 }
