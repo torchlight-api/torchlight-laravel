@@ -5,7 +5,8 @@
 
 namespace Torchlight;
 
-use Illuminate\Http\Client\Pool;
+use GuzzleHttp\Promise\Promise;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -43,6 +44,7 @@ class Client
     protected function request(Collection $blocks)
     {
         $error = false;
+        $response = [];
 
         try {
             $response = $this->collectionOfBlocks($blocks)
@@ -100,19 +102,26 @@ class Client
 
     protected function requestChunks($chunks)
     {
-        return Http::pool(function (Pool $pool) use ($chunks) {
-            $host = Torchlight::config('host', 'https://api.torchlight.dev');
-            $timeout = Torchlight::config('request_timeout', 5);
+        $host = Torchlight::config('host', 'https://api.torchlight.dev');
+        $timeout = Torchlight::config('request_timeout', 5);
 
-            $chunks->each(function ($blocks) use ($pool, $host, $timeout) {
-                $pool->timeout($timeout)
+        // Can't use Http::pool here because it's not
+        // available in Laravel 7 and early 8.
+        return $chunks
+            // This first map fires all the requests.
+            ->map(function ($blocks) use ($host, $timeout) {
+                return Http::async()
                     ->baseUrl($host)
+                    ->timeout($timeout)
                     ->withToken($this->getToken())
                     ->post('highlight', [
                         'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
                     ]);
+            })
+            // The second one waits for them all to finish.
+            ->map(function (Promise $request) {
+                return $request->wait();
             });
-        });
     }
 
     protected function collectionOfBlocks($blocks)
