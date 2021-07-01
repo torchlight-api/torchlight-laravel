@@ -6,7 +6,6 @@
 namespace Torchlight;
 
 use GuzzleHttp\Promise\Promise;
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;

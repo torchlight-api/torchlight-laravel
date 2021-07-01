@@ -5,18 +5,14 @@
 
 namespace Torchlight\Tests;
 
-use Exception;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Promise\FulfilledPromise;
 use http\Client\Response;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\TestCase;
-use Throwable;
-use Torchlight\Block;
 use Torchlight\TorchlightServiceProvider;
 
 abstract class BaseTest extends TestCase
@@ -55,8 +51,8 @@ abstract class BaseTest extends TestCase
                     $fake = $this->fakeResponseBlocks[$block['id']];
 
                     if (is_array($fake)) {
-                        $highlighted = "<div class='highlighted'>" . $block['code'] . "</div>";
-                        
+                        $highlighted = "<div class='highlighted'>" . $block['code'] . '</div>';
+
                         $response[] = array_merge($block, [
                             'classes' => 'torchlight',
                             'styles' => 'background-color: #000000;',
@@ -106,5 +102,4 @@ abstract class BaseTest extends TestCase
 
         $this->fakeResponseBlocks[$id] = $response;
     }
-
 }
