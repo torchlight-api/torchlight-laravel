@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Torchlight\Block;
 use Torchlight\Client;
-use Torchlight\Exceptions\RequestException;
 use Torchlight\Torchlight;
 
 class ClientTest extends BaseTest
@@ -193,5 +192,4 @@ class ClientTest extends BaseTest
         $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
         $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
     }
-
 }
