@@ -60,7 +60,6 @@ class Client
             } else {
                 $response = $response->json();
             }
-
         } catch (Throwable $e) {
             $e instanceof ConnectionException
                 ? $this->potentiallyThrowRequestException($e)
