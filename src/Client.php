@@ -218,7 +218,7 @@ class Client
     protected function defaultResponse(Block $block)
     {
         $lines = array_map(function ($line) {
-            return "<div class='line'>" . htmlentities($line) . "</div>";
+            return "<div class='line'>" . htmlentities($line) . '</div>';
         }, explode("\n", $block->code));
 
         $highlighted = implode('', $lines);
