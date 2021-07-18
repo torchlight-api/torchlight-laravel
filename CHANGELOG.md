@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.4.5 - 2021-07-18
+
+### Changed
+- The default response (used if a request fails) now includes the `<div class='line'>` wrappers.s
+
 ## 0.4.4 - 2021-06-16
 
 ### Fixed

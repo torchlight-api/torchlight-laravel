@@ -72,20 +72,12 @@ class Client
         $response = collect($response)->keyBy('id');
 
         $blocks->each(function (Block $block) use ($response) {
-            $blockFromResponse = Arr::get($response, "{$block->id()}", []);
+            $blockFromResponse = Arr::get($response, "{$block->id()}", $this->defaultResponse($block));
 
             foreach ($this->applyDirectlyFromResponse() as $key) {
                 if (Arr::has($blockFromResponse, $key)) {
                     $block->{$key} = $blockFromResponse[$key];
                 }
-            }
-
-            if (!$block->wrapped) {
-                $block->wrapped = $this->defaultWrapped($block);
-            }
-
-            if (!$block->highlighted) {
-                $block->highlighted = $this->defaultHighlighted($block);
             }
         });
 
@@ -221,21 +213,21 @@ class Client
      * In the case where nothing returns from the API, we have to show _something_.
      *
      * @param Block $block
-     * @return string
+     * @return array
      */
-    protected function defaultHighlighted(Block $block)
+    protected function defaultResponse(Block $block)
     {
-        return htmlentities($block->code);
-    }
+        $lines = array_map(function ($line) {
+            return "<div class='line'>" . htmlentities($line) . "</div>";
+        }, explode("\n", $block->code));
 
-    /**
-     * In the case where nothing returns from the API, we have to show _something_.
-     *
-     * @param Block $block
-     * @return string
-     */
-    protected function defaultWrapped(Block $block)
-    {
-        return "<pre><code class='torchlight'>" . $this->defaultHighlighted($block) . '</code></pre>';
+        $highlighted = implode('', $lines);
+
+        return [
+            'highlighted' => $highlighted,
+            'classes' => 'torchlight',
+            'styles' => '',
+            'wrapped' => "<pre><code class='torchlight'>{$highlighted}</code></pre>",
+        ];
     }
 }

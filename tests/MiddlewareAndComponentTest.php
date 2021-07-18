@@ -38,7 +38,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world.blade.php');
 
         $this->assertEquals(
-            '<pre><code class="" style="">echo &quot;hello world&quot;;</code></pre>',
+            '<pre><code class="torchlight" style=""><div class=\'line\'>echo &quot;hello world&quot;;</div></code></pre>',
             $response->content()
         );
 
@@ -156,6 +156,19 @@ class MiddlewareAndComponentTest extends BaseTest
             return $request['blocks'][0]['code'] === rtrim(file_get_contents(config_path('app.php'), '\n'));
         });
     }
+
+    /** @test */
+    public function code_contents_can_be_a_file_2()
+    {
+        $this->fakeNullResponse('component');
+
+        $this->getView('contents-via-file-2.blade.php');
+
+        Http::assertSent(function ($request) {
+            return $request['blocks'][0]['code'] === rtrim(file_get_contents(config_path('app.php'), '\n'));
+        });
+    }
+
 
     /** @test */
     public function two_components_work()

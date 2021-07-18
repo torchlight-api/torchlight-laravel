@@ -174,8 +174,8 @@ class ClientTest extends BaseTest
 
         Torchlight::highlight($block);
 
-        $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
-        $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
+        $this->assertEquals('<div class=\'line\'>echo &quot;hello world&quot;;</div>', $block->highlighted);
+        $this->assertEquals('<pre><code class=\'torchlight\'><div class=\'line\'>echo &quot;hello world&quot;;</div></code></pre>', $block->wrapped);
     }
 
     /** @test */
@@ -189,7 +189,7 @@ class ClientTest extends BaseTest
 
         Torchlight::highlight($block);
 
-        $this->assertEquals('echo &quot;hello world&quot;;', $block->highlighted);
-        $this->assertEquals('<pre><code class=\'torchlight\'>echo &quot;hello world&quot;;</code></pre>', $block->wrapped);
+        $this->assertEquals('<div class=\'line\'>echo &quot;hello world&quot;;</div>', $block->highlighted);
+        $this->assertEquals('<pre><code class=\'torchlight\'><div class=\'line\'>echo &quot;hello world&quot;;</div></code></pre>', $block->wrapped);
     }
 }
