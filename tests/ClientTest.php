@@ -39,7 +39,10 @@ class ClientTest extends BaseTest
         config()->set('torchlight', [
             'theme' => 'material',
             'token' => 'token',
-            'bust' => 0
+            'bust' => 0,
+            'options' => [
+                'lineNumbers' => true
+            ]
         ]);
     }
 
@@ -54,9 +57,12 @@ class ClientTest extends BaseTest
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization', 'Bearer token')
+                && $request['options'] === [
+                    'lineNumbers' => true
+                ]
                 && $request['blocks'] === [[
                     'id' => 'id',
-                    'hash' => '49c75d827bf95472ac155c6b6cc42aaf',
+                    'hash' => 'e937def4cb365a758d1bf55ecc7fea5b',
                     'language' => 'php',
                     'theme' => 'material',
                     'code' => 'echo "hello world";',

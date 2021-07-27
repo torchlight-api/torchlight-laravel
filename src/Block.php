@@ -114,7 +114,13 @@ class Block
      */
     public function hash()
     {
-        return md5($this->language . $this->theme . $this->code . Torchlight::config('bust'));
+        return md5(
+            $this->language
+            . $this->theme
+            . $this->code
+            . Torchlight::config('bust')
+            . json_encode(Torchlight::config('options'))
+        );
     }
 
     /**

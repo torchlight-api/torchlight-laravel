@@ -94,7 +94,7 @@ EOT;
 
         $this->assertEquals([
             'id' => 'id',
-            'hash' => '494dc5134843e4f6fdcc838e8bcd7f7c',
+            'hash' => '7580494fda334fc2329cdde34ad4a1d1',
             'language' => 'new language',
             'theme' => 'new theme',
             'code' => 'new code',

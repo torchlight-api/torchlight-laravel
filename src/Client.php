@@ -5,7 +5,6 @@
 
 namespace Torchlight;
 
-use GuzzleHttp\Promise\Promise;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -52,6 +51,7 @@ class Client
                 ->withToken($this->getToken())
                 ->post('highlight', [
                     'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
+                    'options' => $this->getOptions(),
                 ]);
 
             if ($response->failed()) {
@@ -87,30 +87,6 @@ class Client
         return $blocks;
     }
 
-    protected function requestChunks($chunks)
-    {
-        $host = Torchlight::config('host', 'https://api.torchlight.dev');
-        $timeout = Torchlight::config('request_timeout', 5);
-
-        // Can't use Http::pool here because it's not
-        // available in Laravel 7 and early 8.
-        return $chunks
-            // This first map fires all the requests.
-            ->map(function ($blocks) use ($host, $timeout) {
-                return Http::async()
-                    ->baseUrl($host)
-                    ->timeout($timeout)
-                    ->withToken($this->getToken())
-                    ->post('highlight', [
-                        'blocks' => $this->blocksAsRequestParam($blocks)->values()->toArray(),
-                    ]);
-            })
-            // The second one waits for them all to finish.
-            ->map(function (Promise $request) {
-                return $request->wait();
-            });
-    }
-
     protected function collectionOfBlocks($blocks)
     {
         return collect($blocks)->each(function ($block) {
@@ -131,6 +107,17 @@ class Client
         }
 
         return $token;
+    }
+
+    protected function getOptions()
+    {
+        $options = Torchlight::config('options', []);
+
+        if (!is_array($options)) {
+            $options = [];
+        }
+
+        return $options;
     }
 
     protected function potentiallyThrowRequestException($exception)

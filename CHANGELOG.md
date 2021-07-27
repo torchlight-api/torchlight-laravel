@@ -2,10 +2,15 @@
 
 ## Unreleased
 
+## 0.4.6 - 2021-07-27
+
+### Added
+- Added the ability to send `options` from the config file to the API.
+
 ## 0.4.5 - 2021-07-18
 
 ### Changed
-- The default response (used if a request fails) now includes the `<div class='line'>` wrappers.s
+- The default response (used if a request fails) now includes the `<div class='line'>` wrappers.
 
 ## 0.4.4 - 2021-06-16
 
