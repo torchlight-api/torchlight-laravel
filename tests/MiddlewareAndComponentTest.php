@@ -45,7 +45,7 @@ class MiddlewareAndComponentTest extends BaseTest
         Http::assertSent(function ($request) {
             return $request['blocks'][0] === [
                 'id' => 'component',
-                'hash' => 'fe47ca550596fd0cea4664cc73774bcb',
+                'hash' => '66192c35bf8a710bee532ac328c76977',
                 'language' => 'php',
                 'theme' => 'material-theme-palenight',
                 'code' => 'echo "hello world";',
