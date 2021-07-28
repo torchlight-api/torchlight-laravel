@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 0.4.6 - 2021-07-27
+## 0.4.6 - 2021-07-28
 
 ### Added
 - Added the ability to send `options` from the config file to the API.
