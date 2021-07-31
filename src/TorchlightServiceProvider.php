@@ -23,7 +23,7 @@ class TorchlightServiceProvider extends ServiceProvider
     public function bindManagerSingleton()
     {
         $this->app->singleton(Manager::class, function () {
-            return new Manager($this->app);
+            return new Manager;
         });
     }
 

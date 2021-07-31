@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+- Changed the signature for the Manager class. Remove the requirement for the container to be passed in.
+
 ## 0.4.6 - 2021-07-28
 
 ### Added
