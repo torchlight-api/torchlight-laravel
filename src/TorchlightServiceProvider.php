@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Torchlight\Blade\BladeManager;
 use Torchlight\Blade\CodeComponent;
 use Torchlight\Commands\Install;
+use Torchlight\Middleware\LivewireRenderTorchlight;
 
 class TorchlightServiceProvider extends ServiceProvider
 {
@@ -60,8 +61,16 @@ class TorchlightServiceProvider extends ServiceProvider
         ]);
     }
 
+    public function registerLivewire()
+    {
+        if (class_exists('\\Livewire\\LifecycleManager')) {
+            \Livewire\LifecycleManager::registerHydrationMiddleware([LivewireRenderTorchlight::class]);
+        }
+    }
+
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/torchlight.php', 'torchlight');
+        $this->registerLivewire();
     }
 }
