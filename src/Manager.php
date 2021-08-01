@@ -5,11 +5,14 @@
 
 namespace Torchlight;
 
+use Exception;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Torchlight\Contracts\PostProcessor;
+use Torchlight\Exceptions\ConfigurationException;
 
 class Manager
 {
@@ -34,6 +37,11 @@ class Manager
      * @var null|string
      */
     protected $environment;
+
+    /**
+     * @var array
+     */
+    protected $postProcessors = [];
 
     /**
      * @param Client $client
@@ -64,7 +72,15 @@ class Manager
      */
     public function highlight($blocks)
     {
-        return $this->client()->highlight($blocks);
+        $blocks = $this->client()->highlight($blocks);
+
+        foreach ($blocks as $block) {
+            foreach ($this->postProcessors as $processor) {
+                app($processor)->process($block);
+            }
+        }
+
+        return $blocks;
     }
 
     /**
@@ -81,6 +97,24 @@ class Manager
     public function overrideEnvironment($environment = null)
     {
         $this->environment = $environment;
+    }
+
+    /**
+     * @param array|string $classes
+     * @throws ConfigurationException
+     */
+    public function addPostProcessors($classes)
+    {
+        $classes = Arr::wrap($classes);
+
+        foreach ($classes as $class) {
+            if (!in_array(PostProcessor::class, class_implements($class))) {
+                $class = is_string($class) ? $class : get_class($class);
+                throw new ConfigurationException("Post-processor '$class' does not implement " . PostProcessor::class);
+            }
+
+            $this->postProcessors[] = $class;
+        }
     }
 
     /**
