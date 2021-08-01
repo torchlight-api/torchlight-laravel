@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Torchlight\Blade\BladeManager;
 use Torchlight\Blade\CodeComponent;
 use Torchlight\Commands\Install;
+use Torchlight\Middleware\RenderTorchlight;
 
 class TorchlightServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,7 @@ class TorchlightServiceProvider extends ServiceProvider
         $this->registerCommands();
         $this->publishConfig();
         $this->registerBladeComponent();
+        $this->registerLivewire();
     }
 
     public function bindManagerSingleton()
@@ -58,6 +60,15 @@ class TorchlightServiceProvider extends ServiceProvider
         $this->loadViewComponentsAs('torchlight', [
             'code' => CodeComponent::class
         ]);
+    }
+
+    public function registerLivewire()
+    {
+        if (class_exists('\\Livewire\\Livewire')) {
+            \Livewire\Livewire::addPersistentMiddleware([
+                RenderTorchlight::class,
+            ]);
+        }
     }
 
     public function register()
