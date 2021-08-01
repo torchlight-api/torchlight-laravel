@@ -8,7 +8,6 @@ namespace Torchlight\Tests;
 use Torchlight\Block;
 use Torchlight\Contracts\PostProcessor;
 use Torchlight\Exceptions\ConfigurationException;
-use Torchlight\Exceptions\RequestException;
 use Torchlight\Torchlight;
 
 class PostProcessorTest extends BaseTest
@@ -80,14 +79,12 @@ class PostProcessorTest extends BaseTest
             Block::class
         ]);
     }
-
 }
 
 class NullPostProcessor implements PostProcessor
 {
     public function process(Block $block)
     {
-
     }
 }
 

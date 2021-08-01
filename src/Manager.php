@@ -5,7 +5,6 @@
 
 namespace Torchlight;
 
-use Exception;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
