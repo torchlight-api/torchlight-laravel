@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.1 - 2021-08-01
+
+### Added
+- Added support for Laravel Livewire ([#10](https://github.com/torchlight-api/torchlight-laravel/pull/10))
+- Added post-processors to allow your app to hook into the rendered response before it's sent to the browser.
+
 ## 0.5.0 - 2021-07-31
 
 ### Changed
