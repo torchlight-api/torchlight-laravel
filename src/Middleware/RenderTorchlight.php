@@ -34,8 +34,9 @@ class RenderTorchlight
         return BladeManager::renderResponse($response);
     }
 
-    protected function handleLivewireRequest(JsonResponse $response) {
-        if (! BladeManager::getBlocks()) {
+    protected function handleLivewireRequest(JsonResponse $response)
+    {
+        if (!BladeManager::getBlocks()) {
             return $response;
         }
 
