@@ -216,7 +216,7 @@ class Block
     {
         $multiplier = Torchlight::config('spaces_per_tab', 4);
 
-        return str_replace("\t", str_repeat(" ", $multiplier), $code);
+        return str_replace("\t", str_repeat(' ', $multiplier), $code);
     }
 
     /**
