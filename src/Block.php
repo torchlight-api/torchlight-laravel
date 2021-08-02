@@ -202,7 +202,21 @@ class Block
      */
     protected function clean($code)
     {
-        return $this->dedent(rtrim($code));
+        $code = rtrim($code);
+        $code = $this->replaceTabs($code);
+
+        return $this->dedent($code);
+    }
+
+    /**
+     * @param $code
+     * @return string
+     */
+    protected function replaceTabs($code)
+    {
+        $multiplier = Torchlight::config('spaces_per_tab', 4);
+
+        return str_replace("\t", str_repeat(" ", $multiplier), $code);
     }
 
     /**

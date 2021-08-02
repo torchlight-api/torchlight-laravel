@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.5.2 - 2021-08-02
+
+### Fixed
+- Replace tabs with spaces in code before it's sent to the API.
+
 ## 0.5.1 - 2021-08-01
 
 ### Added

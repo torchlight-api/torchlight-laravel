@@ -6,6 +6,7 @@
 namespace Torchlight\Tests;
 
 use Torchlight\Block;
+use Torchlight\Torchlight;
 
 class BlockTest extends BaseTest
 {
@@ -23,7 +24,7 @@ EOT;
 
         $block->code($code);
 
-        $dedented = $code = <<<EOT
+        $dedented = <<<EOT
 echo 1;
 if (1) {
     return;
@@ -34,12 +35,53 @@ EOT;
     }
 
     /** @test */
+    public function it_replaces_tabs()
+    {
+        $block = Block::make();
+
+        $block->code("if (1) {\n\tif (1) {\n\t\treturn;\n\t}\n}");
+
+        $cleaned = <<<EOT
+if (1) {
+    if (1) {
+        return;
+    }
+}
+EOT;
+
+        $this->assertEquals($block->code, $cleaned);
+    }
+
+    /** @test */
+    public function can_change_tab_size()
+    {
+        Torchlight::getConfigUsing([
+            'spaces_per_tab' => 2
+        ]);
+
+        $block = Block::make();
+
+        $block->code("if (1) {\n\tif (1) {\n\t\treturn;\n\t}\n}");
+
+        $cleaned = <<<EOT
+if (1) {
+  if (1) {
+    return;
+  }
+}
+EOT;
+
+        $this->assertEquals($block->code, $cleaned);
+    }
+
+    /** @test */
     public function it_right_trims()
     {
         $block = Block::make()->code('echo 1;      ');
 
         $this->assertEquals($block->code, 'echo 1;');
     }
+
 
     /** @test */
     public function you_can_set_your_own_id()
