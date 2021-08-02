@@ -82,7 +82,6 @@ EOT;
         $this->assertEquals($block->code, 'echo 1;');
     }
 
-
     /** @test */
     public function you_can_set_your_own_id()
     {
