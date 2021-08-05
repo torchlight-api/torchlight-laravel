@@ -56,7 +56,7 @@ EOT;
     public function can_change_tab_size()
     {
         Torchlight::getConfigUsing([
-            'spaces_per_tab' => 2
+            'tab_width' => 2
         ]);
 
         $block = Block::make();
@@ -70,6 +70,23 @@ if (1) {
   }
 }
 EOT;
+
+        $this->assertEquals($block->code, $cleaned);
+    }
+
+
+    /** @test */
+    public function can_leave_tabs_in()
+    {
+        Torchlight::getConfigUsing([
+            'tab_width' => false
+        ]);
+
+        $block = Block::make();
+
+        $block->code("if (1) {\n\tif (1) {\n\t\treturn;\n\t}\n}");
+
+        $cleaned = "if (1) {\n\tif (1) {\n\t\treturn;\n\t}\n}";
 
         $this->assertEquals($block->code, $cleaned);
     }

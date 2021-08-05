@@ -214,7 +214,11 @@ class Block
      */
     protected function replaceTabs($code)
     {
-        $multiplier = Torchlight::config('spaces_per_tab', 4);
+        $multiplier = Torchlight::config('tab_width', 4);
+
+        if ($multiplier === false) {
+            return $code;
+        }
 
         return str_replace("\t", str_repeat(' ', $multiplier), $code);
     }
