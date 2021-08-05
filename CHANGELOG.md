@@ -6,6 +6,10 @@
 
 - Post-processors don't run if Laravel is compiling views.
 
+### Added
+
+- You can set `tab_width` to `false` to output literal tabs into the rendered HTML.
+
 ## 0.5.2 - 2021-08-02
 
 ### Fixed
