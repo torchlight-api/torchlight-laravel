@@ -43,6 +43,11 @@ class Manager
     protected $postProcessors = [];
 
     /**
+     * @var bool
+     */
+    protected $currentlyCompilingViews = false;
+
+    /**
      * @param Client $client
      * @return Manager
      */
@@ -66,6 +71,14 @@ class Manager
     }
 
     /**
+     * @param $value
+     */
+    public function currentlyCompilingViews($value)
+    {
+        $this->currentlyCompilingViews = $value;
+    }
+
+    /**
      * @param $blocks
      * @return mixed
      */
@@ -73,11 +86,7 @@ class Manager
     {
         $blocks = $this->client()->highlight($blocks);
 
-        foreach ($blocks as $block) {
-            foreach ($this->postProcessors as $processor) {
-                app($processor)->process($block);
-            }
-        }
+        $this->postProcessBlocks($blocks);
 
         return $blocks;
     }
@@ -113,6 +122,31 @@ class Manager
             }
 
             $this->postProcessors[] = $class;
+        }
+    }
+
+    /**
+     * @param $blocks
+     */
+    public function postProcessBlocks($blocks)
+    {
+        foreach ($this->postProcessors as $processor) {
+            $processor = app($processor);
+
+            // By default we do _not_ run post-processors when Laravel is compiling
+            // views, because it could lead to data leaks if a post-processor swaps
+            // user data in. If the developer understands this, they can turn
+            // `processEvenWhenCompiling` on and we'll happily run them.
+            $processWhenCompiling = property_exists($processor, 'processEvenWhenCompiling')
+                && $processor->processEvenWhenCompiling;
+
+            if ($this->currentlyCompilingViews && !$processWhenCompiling) {
+                continue;
+            }
+
+            foreach ($blocks as $block) {
+                $processor->process($block);
+            }
         }
     }
 

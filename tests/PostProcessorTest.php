@@ -37,6 +37,43 @@ class PostProcessorTest extends BaseTest
     }
 
     /** @test */
+    public function it_doesnt_run_when_compiling()
+    {
+        $this->fakeSuccessfulResponse('id');
+
+        Torchlight::addPostProcessors([
+            GoodbyePostProcessor::class
+        ]);
+
+        Torchlight::currentlyCompilingViews(true);
+
+        $blocks = Torchlight::highlight(
+            Block::make('id')->language('php')->code('echo "hello world";')
+        );
+
+        $this->assertEquals($blocks[0]->highlighted, '<div class=\'highlighted\'>echo "hello world";</div>');
+    }
+
+    /** @test */
+    public function it_runs_when_compiling_if_requested()
+    {
+        $this->fakeSuccessfulResponse('id');
+
+        Torchlight::addPostProcessors([
+            GoodbyePostProcessor::class,
+            RunWhileCompilingProcessor::class,
+        ]);
+
+        Torchlight::currentlyCompilingViews(true);
+
+        $blocks = Torchlight::highlight(
+            Block::make('id')->language('php')->code('echo "hello world";')
+        );
+
+        $this->assertEquals($blocks[0]->highlighted, '<div class=\'highlighted\'>echo "compiled world";</div>');
+    }
+
+    /** @test */
     public function null_processor_works()
     {
         $this->fakeSuccessfulResponse('id');
@@ -101,5 +138,15 @@ class GoodbyeCruelPostProcessor implements PostProcessor
     public function process(Block $block)
     {
         $block->highlighted = str_replace('goodbye', 'goodbye cruel', $block->highlighted);
+    }
+}
+
+class RunWhileCompilingProcessor implements PostProcessor
+{
+    public $processEvenWhenCompiling = true;
+
+    public function process(Block $block)
+    {
+        $block->highlighted = str_replace('hello', 'compiled', $block->highlighted);
     }
 }

@@ -8,6 +8,7 @@ namespace Torchlight;
 use Illuminate\Support\ServiceProvider;
 use Torchlight\Blade\BladeManager;
 use Torchlight\Blade\CodeComponent;
+use Torchlight\Blade\EngineDecorator;
 use Torchlight\Commands\Install;
 use Torchlight\Middleware\RenderTorchlight;
 
@@ -20,6 +21,7 @@ class TorchlightServiceProvider extends ServiceProvider
         $this->publishConfig();
         $this->registerBladeComponent();
         $this->registerLivewire();
+        $this->decorateGrahamCampbellEngines();
     }
 
     public function bindManagerSingleton()
@@ -69,6 +71,53 @@ class TorchlightServiceProvider extends ServiceProvider
                 RenderTorchlight::class,
             ]);
         }
+    }
+
+    /**
+     * Graham Campbell's Markdown package is a common (and excellent) package that many
+     * Laravel developers use for markdown. It registers a few view engines so you can
+     * just return e.g. `view("file.md")` and the markdown will get rendered to HTML.
+     *
+     * The markdown file will get parsed *once* and saved to the disk, which could lead
+     * to data leaks if you're using a post processor that injects some sort of user
+     * details. The first user that hits the page will have their information saved
+     * into the compiled views.
+     *
+     * We decorate the engines that Graham uses so we can alert our post processors
+     * not to run when the views are being compiled.
+     */
+    public function decorateGrahamCampbellEngines()
+    {
+        if (!class_exists('\\GrahamCampbell\\Markdown\\MarkdownServiceProvider')) {
+            return;
+        }
+
+        // The engines won't be registered if this is false.
+        if (!$this->app->config->get('markdown.views')) {
+            return;
+        }
+
+        // Decorate all the engines that Graham's package registers.
+        $this->decorateEngine('md');
+        $this->decorateEngine('phpmd');
+        $this->decorateEngine('blademd');
+    }
+
+    /**
+     * Decorate a single view engine.
+     * @param $name
+     */
+    protected function decorateEngine($name)
+    {
+        // No engine registered.
+        if (!$resolved = $this->app->view->getEngineResolver()->resolve($name)) {
+            return;
+        }
+
+        // Wrap the existing engine in our decorator.
+        $this->app->view->getEngineResolver()->register($name, function () use ($resolved) {
+            return new EngineDecorator($resolved);
+        });
     }
 
     public function register()

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Post-processors don't run if Laravel is compiling views.
+
 ## 0.5.2 - 2021-08-02
 
 ### Fixed
