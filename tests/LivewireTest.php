@@ -30,5 +30,4 @@ class LivewireTest extends BaseTest
             $this->markTestSkipped('Livewire 1 cannot register middleware.');
         }
     }
-
 }

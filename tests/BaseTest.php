@@ -36,7 +36,7 @@ abstract class BaseTest extends TestCase
         if (class_exists('\\Livewire\\LivewireServiceProvider')) {
             $providers[] = LivewireServiceProvider::class;
         }
-        
+
         return $providers;
     }
 
