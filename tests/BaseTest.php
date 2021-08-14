@@ -12,6 +12,7 @@ use http\Client\Response;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase;
 use Torchlight\TorchlightServiceProvider;
 
@@ -28,9 +29,15 @@ abstract class BaseTest extends TestCase
 
     protected function getPackageProviders($app)
     {
-        return [
-            TorchlightServiceProvider::class
+        $providers = [
+            TorchlightServiceProvider::class,
         ];
+
+        if (class_exists('\\Livewire\\LivewireServiceProvider')) {
+            $providers[] = LivewireServiceProvider::class;
+        }
+        
+        return $providers;
     }
 
     protected function fakeApi()

@@ -66,7 +66,13 @@ class TorchlightServiceProvider extends ServiceProvider
 
     public function registerLivewire()
     {
-        if (class_exists('\\Livewire\\Livewire')) {
+        // Check for the Livewire Facade.
+        if (!class_exists('\\Livewire\\Livewire')) {
+            return;
+        }
+
+        // Livewire 1.x does not have the `addPersistentMiddleware` method.
+        if (method_exists(\Livewire\LivewireManager::class, 'addPersistentMiddleware')) {
             \Livewire\Livewire::addPersistentMiddleware([
                 RenderTorchlight::class,
             ]);
