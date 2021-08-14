@@ -74,7 +74,6 @@ EOT;
         $this->assertEquals($block->code, $cleaned);
     }
 
-
     /** @test */
     public function can_leave_tabs_in()
     {
