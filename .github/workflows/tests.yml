@@ -46,3 +46,18 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit
+
+      - name: Install Livewire V1
+        run: |
+          composer require "livewire/livewire:^1" --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
+
+      - name: Install Livewire V2
+        run: |
+          composer require "livewire/livewire:^2" --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
+
