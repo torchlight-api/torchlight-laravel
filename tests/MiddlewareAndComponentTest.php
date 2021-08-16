@@ -87,7 +87,6 @@ class MiddlewareAndComponentTest extends BaseTest
         );
     }
 
-
     /** @test */
     public function classes_get_merged()
     {
