@@ -150,6 +150,24 @@ class Manager
         }
     }
 
+    public function processPotentialFileContents($file)
+    {
+        $directories = $this->config('snippet_directories', []);
+
+        // Add a blank path to account for absolute paths.
+        array_unshift($directories, '');
+
+        foreach ($directories as $directory) {
+            $directory = Str::finish($directory, DIRECTORY_SEPARATOR);
+
+            if (is_file($directory . $file)) {
+                return file_get_contents($directory . $file);
+            }
+        }
+
+        return $file;
+    }
+
     /**
      * Get an item out of the config using dot notation.
      *

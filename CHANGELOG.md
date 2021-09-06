@@ -2,18 +2,20 @@
 
 ## Unreleased
 
+## 0.5.4 - 2021-09-06
+
+### Added
+- Added the ability to configure the directories where Torchlight looks for snippets.
+
 ## 0.5.3 - 2021-08-14
 
 ### Changed
-
 - Post-processors don't run if Laravel is compiling views.
 
 ### Added
-
 - You can set `tab_width` to `false` to output literal tabs into the rendered HTML.
 
 ### Fixed
-
 - Livewire middleware won't be registered for V1 of Livewire, since it's not possible.
 
 ## 0.5.2 - 2021-08-02

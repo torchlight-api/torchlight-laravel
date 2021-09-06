@@ -24,6 +24,13 @@ return [
     // `false` to leave literal tabs in the HTML.
     'tab_width' => 4,
 
+    // If you pass a filename to the code component or in a markdown
+    // block, Torchlight will look for code snippets in the
+    // following directories.
+    'snippet_directories' => [
+        resource_path()
+    ],
+
     // Global options to control blocks-level settings.
     // https://torchlight.dev/docs/options
     'options' => [

@@ -7,6 +7,7 @@ namespace Torchlight\Blade;
 
 use Illuminate\View\Component;
 use Torchlight\Block;
+use Torchlight\Torchlight;
 
 class CodeComponent extends Component
 {
@@ -38,12 +39,7 @@ class CodeComponent extends Component
     public function capture($contents)
     {
         $contents = $contents ?: $this->contents;
-
-        if (is_file($contents)) {
-            $contents = file_get_contents($contents);
-        } elseif (is_callable('resource_path') && is_file(resource_path($contents))) {
-            $contents = file_get_contents(resource_path($contents));
-        }
+        $contents = Torchlight::processPotentialFileContents($contents);
 
         BladeManager::registerBlock($this->block->code($contents));
     }
