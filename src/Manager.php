@@ -150,7 +150,7 @@ class Manager
         }
     }
 
-    public function processPotentialFileContents($file)
+    public function processFileContents($file)
     {
         $directories = $this->config('snippet_directories', []);
 
@@ -165,7 +165,7 @@ class Manager
             }
         }
 
-        return $file;
+        return false;
     }
 
     /**

@@ -39,7 +39,7 @@ class CodeComponent extends Component
     public function capture($contents)
     {
         $contents = $contents ?: $this->contents;
-        $contents = Torchlight::processPotentialFileContents($contents);
+        $contents = Torchlight::processFileContents($contents) ?: $contents;
 
         BladeManager::registerBlock($this->block->code($contents));
     }

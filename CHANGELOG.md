@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.5.5 - 2021-09-06
+
+### Changed
+- Changed the signature of the file processor.
+
 ## 0.5.4 - 2021-09-06
 
 ### Added
