@@ -5,6 +5,7 @@
 
 namespace Torchlight\Blade;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 use Torchlight\Block;
 use Torchlight\Torchlight;
@@ -18,6 +19,8 @@ class CodeComponent extends Component
     public $contents;
 
     public $block;
+
+    protected $trimFixDelimiter = '##LARAVEL_TRIM_FIXER##';
 
     /**
      * Create a new component instance.
@@ -36,10 +39,47 @@ class CodeComponent extends Component
         $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme);
     }
 
+    public function withAttributes(array $attributes)
+    {
+        // By default Laravel trims slot content in the ManagesComponents
+        // trait. The line that does the trimming looks like this:
+        // `$defaultSlot = new HtmlString(trim(ob_get_clean()));`
+
+        // The problem with this is that when you have a Blade Component
+        // that is indented in this way:
+
+        // <pre>
+        //    <x-torchlight-code>
+        //        public function {
+        //            // test
+        //        }
+        //    </x-torchlight-code>
+        // </pre>
+
+        // Then Laravel will strip the leading whitespace off of the first
+        // line, of content making it impossible for us to know how
+        // much to dedent the rest of the code.
+
+        // We're hijacking this `withAttributes` method because it is called
+        // _after_ the buffer is opened but before the content. So we echo
+        // out some nonsense which will prevent Laravel from trimming
+        // the whitespace. We'll replace it later. We only do this
+        // if it's not a file-based-contents component.
+        if (is_null($this->contents)) {
+            echo $this->trimFixDelimiter;
+        }
+
+        return parent::withAttributes($attributes);
+    }
+
     public function capture($contents)
     {
         $contents = $contents ?: $this->contents;
         $contents = Torchlight::processFileContents($contents) ?: $contents;
+
+        if (Str::startsWith($contents, $this->trimFixDelimiter)) {
+            $contents = Str::replaceFirst($this->trimFixDelimiter, '', $contents);
+        }
 
         BladeManager::registerBlock($this->block->code($contents));
     }

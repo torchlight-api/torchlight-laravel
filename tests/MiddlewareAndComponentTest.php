@@ -187,6 +187,37 @@ class MiddlewareAndComponentTest extends BaseTest
     }
 
     /** @test */
+    public function dedent_works_properly()
+    {
+        $this->withoutExceptionHandling();
+        $this->fakeNullResponse('component');
+
+        $response = $this->getView('dedent_works_properly.blade.php');
+
+        $result = "<code class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
+        $this->assertEquals(
+            "<pre>\n    $result</pre>\n<pre>$result</pre>\n<pre>$result</pre>",
+            $response->content()
+        );
+    }
+
+    /** @test */
+    public function two_code_in_one_pre()
+    {
+        $this->withoutExceptionHandling();
+        $this->fakeNullResponse('component');
+
+        $response = $this->getView('two-codes-in-one-tag.blade.php');
+
+        $result = "<code class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
+        $this->assertEquals(
+            "<pre>\n    $result    $result</pre>",
+            $response->content()
+        );
+    }
+
+
+    /** @test */
     public function two_components_work()
     {
         $this->fakeSuccessfulResponse('component1', [
