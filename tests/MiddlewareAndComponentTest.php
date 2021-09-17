@@ -208,8 +208,6 @@ class MiddlewareAndComponentTest extends BaseTest
                 $response->content()
             );
         }
-
-
     }
 
     /** @test */
