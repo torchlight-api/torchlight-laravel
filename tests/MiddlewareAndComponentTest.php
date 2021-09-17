@@ -216,7 +216,6 @@ class MiddlewareAndComponentTest extends BaseTest
         );
     }
 
-
     /** @test */
     public function two_components_work()
     {

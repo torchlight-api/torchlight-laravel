@@ -11,6 +11,7 @@ class Torchlight extends Facade
 {
     /**
      * @return string
+     *
      * @see Manager
      */
     protected static function getFacadeAccessor()

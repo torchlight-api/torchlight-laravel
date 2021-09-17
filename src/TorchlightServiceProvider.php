@@ -111,6 +111,7 @@ class TorchlightServiceProvider extends ServiceProvider
 
     /**
      * Decorate a single view engine.
+     *
      * @param $name
      */
     protected function decorateEngine($name)
