@@ -8,6 +8,7 @@ namespace Torchlight\Tests;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Torchlight\Blade\BladeManager;
 use Torchlight\Middleware\RenderTorchlight;
 
 class MiddlewareAndComponentTest extends BaseTest
@@ -195,10 +196,20 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('dedent_works_properly.blade.php');
 
         $result = "<code class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
-        $this->assertEquals(
-            "<pre>\n    $result</pre>\n<pre>$result</pre>\n<pre>$result</pre>",
-            $response->content()
-        );
+
+        if (BladeManager::$affectedBySpacingBug) {
+            $this->assertEquals(
+                "<pre>\n    $result\n</pre>\n<pre>$result</pre>\n<pre>$result</pre>",
+                $response->content()
+            );
+        } else {
+            $this->assertEquals(
+                "<pre>\n    $result</pre>\n<pre>$result</pre>\n<pre>$result</pre>",
+                $response->content()
+            );
+        }
+
+
     }
 
     /** @test */
@@ -210,10 +221,18 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('two-codes-in-one-tag.blade.php');
 
         $result = "<code class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
-        $this->assertEquals(
-            "<pre>\n    $result    $result</pre>",
-            $response->content()
-        );
+
+        if (BladeManager::$affectedBySpacingBug) {
+            $this->assertEquals(
+                "<pre>\n    {$result}\n    {$result}\n</pre>",
+                $response->content()
+            );
+        } else {
+            $this->assertEquals(
+                "<pre>\n    $result    $result</pre>",
+                $response->content()
+            );
+        }
     }
 
     /** @test */
