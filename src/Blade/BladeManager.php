@@ -18,6 +18,7 @@ class BladeManager
      * tags, which ours usually is.
      *
      * @see https://github.com/laravel/framework/blob/8.x/CHANGELOG-8.x.md#v8230-2021-01-19.
+     *
      * @var bool
      */
     public static $affectedBySpacingBug = false;
