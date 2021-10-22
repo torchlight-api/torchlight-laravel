@@ -159,7 +159,6 @@ class Manager
                 $block->highlighted = Str::replace($needle, $replacement, $block->highlighted);
             }
         }
-
     }
 
     public function processFileContents($file)
