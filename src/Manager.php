@@ -155,7 +155,7 @@ class Manager
                 continue;
             }
 
-            foreach($block->postProcess as $needle => $replacement) {
+            foreach ($block->postProcess as $needle => $replacement) {
                 $block->highlighted = Str::replace($needle, $replacement, $block->highlighted);
             }
         }
