@@ -18,6 +18,8 @@ class CodeComponent extends Component
 
     public $contents;
 
+    public $postProcess;
+
     public $block;
 
     protected $trimFixDelimiter = '##LARAVEL_TRIM_FIXER##';
@@ -30,13 +32,13 @@ class CodeComponent extends Component
      * @param  null  $contents
      * @param  null  $torchlightId
      */
-    public function __construct($language, $theme = null, $contents = null, $torchlightId = null)
+    public function __construct($language, $theme = null, $contents = null, $postProcess = null, $torchlightId = null)
     {
         $this->language = $language;
         $this->theme = $theme;
         $this->contents = $contents;
 
-        $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme);
+        $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme)->postProcess($this->postProcess);
     }
 
     public function withAttributes(array $attributes)

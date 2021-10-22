@@ -149,6 +149,17 @@ class Manager
                 $processor->process($block);
             }
         }
+
+        foreach ($blocks as $block) {
+            if ($this->currentlyCompilingViews || empty($block->postProcess)) {
+                continue;
+            }
+
+            foreach($block->postProcess as $needle => $replacement) {
+                $block->highlighted = Str::replace($needle, $replacement, $block->highlighted);
+            }
+        }
+
     }
 
     public function processFileContents($file)

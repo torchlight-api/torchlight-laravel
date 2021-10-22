@@ -36,6 +36,13 @@ class Block
     public $code;
 
     /**
+     * The post processor.
+     *
+     * @var array
+     */
+    public $postProcess = [];
+
+    /**
      * The highlighted code, wrapped in pre+code tags.
      *
      * @var string
@@ -167,6 +174,17 @@ class Block
     public function code($code)
     {
         $this->code = $this->clean($code);
+
+        return $this;
+    }
+
+    /**
+     * @param $postProcess
+     * @return $this
+     */
+    public function postProcess($postProcess)
+    {
+        $this->postProcess = $postProcess;
 
         return $this;
     }
