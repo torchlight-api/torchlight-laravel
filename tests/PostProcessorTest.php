@@ -107,6 +107,18 @@ class PostProcessorTest extends BaseTest
     }
 
     /** @test */
+    public function it_runs_inline_post_processors()
+    {
+        $this->fakeSuccessfulResponse('id');
+
+        $blocks = Torchlight::highlight(
+            Block::make('id')->language('php')->code('echo "hello world";')->postProcess(['hello world' => 'goodbye world'])
+        );
+
+        $this->assertEquals($blocks[0]->highlighted, '<div class=\'highlighted\'>echo "goodbye world";</div>');
+    }
+
+    /** @test */
     public function must_implement_interface()
     {
         $this->expectException(ConfigurationException::class);
