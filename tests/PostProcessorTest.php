@@ -8,6 +8,7 @@ namespace Torchlight\Tests;
 use Torchlight\Block;
 use Torchlight\Contracts\PostProcessor;
 use Torchlight\Exceptions\ConfigurationException;
+use Torchlight\PostProcessors\SimpleSwapProcessor;
 use Torchlight\Torchlight;
 
 class PostProcessorTest extends BaseTest
@@ -112,7 +113,8 @@ class PostProcessorTest extends BaseTest
         $this->fakeSuccessfulResponse('id');
 
         $blocks = Torchlight::highlight(
-            Block::make('id')->language('php')->code('echo "hello world";')->postProcess(['hello world' => 'goodbye world'])
+            Block::make('id')->language('php')->code('echo "hello world";')
+                ->addPostProcessor(SimpleSwapProcessor::make(['hello world' => 'goodbye world']))
         );
 
         $this->assertEquals($blocks[0]->highlighted, '<div class=\'highlighted\'>echo "goodbye world";</div>');

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Torchlight\Contracts\PostProcessor;
 use Torchlight\Exceptions\ConfigurationException;
+use Torchlight\PostProcessors\SimpleSwapProcessor;
 
 class Manager
 {
@@ -48,7 +49,7 @@ class Manager
     protected $currentlyCompilingViews = false;
 
     /**
-     * @param  Client  $client
+     * @param Client $client
      * @return Manager
      */
     public function setClient(Client $client)
@@ -100,7 +101,7 @@ class Manager
     }
 
     /**
-     * @param  string|null  $environment
+     * @param string|null $environment
      */
     public function overrideEnvironment($environment = null)
     {
@@ -108,21 +109,14 @@ class Manager
     }
 
     /**
-     * @param  array|string  $classes
-     *
-     * @throws ConfigurationException
+     * @param array|string $classes
      */
     public function addPostProcessors($classes)
     {
         $classes = Arr::wrap($classes);
 
         foreach ($classes as $class) {
-            if (!in_array(PostProcessor::class, class_implements($class))) {
-                $class = is_string($class) ? $class : get_class($class);
-                throw new ConfigurationException("Post-processor '$class' does not implement " . PostProcessor::class);
-            }
-
-            $this->postProcessors[] = $class;
+            $this->postProcessors[] = $this->validatedPostProcessor($class);
         }
     }
 
@@ -131,17 +125,9 @@ class Manager
      */
     public function postProcessBlocks($blocks)
     {
+        // Global post-processors
         foreach ($this->postProcessors as $processor) {
-            $processor = app($processor);
-
-            // By default we do _not_ run post-processors when Laravel is compiling
-            // views, because it could lead to data leaks if a post-processor swaps
-            // user data in. If the developer understands this, they can turn
-            // `processEvenWhenCompiling` on and we'll happily run them.
-            $processWhenCompiling = property_exists($processor, 'processEvenWhenCompiling')
-                && $processor->processEvenWhenCompiling;
-
-            if ($this->currentlyCompilingViews && !$processWhenCompiling) {
+            if ($this->shouldSkipProcessor($processor)) {
                 continue;
             }
 
@@ -150,13 +136,14 @@ class Manager
             }
         }
 
+        // Block specific post-processors
         foreach ($blocks as $block) {
-            if ($this->currentlyCompilingViews || empty($block->postProcess)) {
-                continue;
-            }
+            foreach ($block->postProcessors as $processor) {
+                if ($this->shouldSkipProcessor($processor)) {
+                    continue;
+                }
 
-            foreach ($block->postProcess as $needle => $replacement) {
-                $block->highlighted = Str::replace($needle, $replacement, $block->highlighted);
+                $processor->process($block);
             }
         }
     }
@@ -183,7 +170,7 @@ class Manager
      * Get an item out of the config using dot notation.
      *
      * @param $key
-     * @param  null  $default
+     * @param null $default
      * @return mixed
      */
     public function config($key, $default = null)
@@ -220,7 +207,7 @@ class Manager
     /**
      * Set the cache implementation directly instead of using a driver.
      *
-     * @param  Repository  $cache
+     * @param Repository $cache
      */
     public function setCacheInstance(Repository $cache)
     {
@@ -246,7 +233,7 @@ class Manager
     /**
      * Return all the Torchlight IDs in a given string.
      *
-     * @param  string  $content
+     * @param string $content
      * @return array
      */
     public function findTorchlightIds($content)
@@ -254,5 +241,36 @@ class Manager
         preg_match_all('/__torchlight-block-\[(.+?)\]/', $content, $matches);
 
         return array_values(array_unique(Arr::get($matches, 1, [])));
+    }
+
+    /**
+     * @param $processor
+     * @return PostProcessor
+     * @throws ConfigurationException
+     */
+    public function validatedPostProcessor($processor)
+    {
+        if (is_string($processor)) {
+            $processor = app($processor);
+        }
+
+        if (!in_array(PostProcessor::class, class_implements($processor))) {
+            $class = get_class($processor);
+            throw new ConfigurationException("Post-processor '$class' does not implement " . PostProcessor::class);
+        }
+
+        return $processor;
+    }
+
+    protected function shouldSkipProcessor($processor)
+    {
+        // By default we do _not_ run post-processors when Laravel is compiling
+        // views, because it could lead to data leaks if a post-processor swaps
+        // user data in. If the developer understands this, they can turn
+        // `processEvenWhenCompiling` on and we'll happily run them.
+        $processWhenCompiling = property_exists($processor, 'processEvenWhenCompiling')
+            && $processor->processEvenWhenCompiling;
+
+        return $this->currentlyCompilingViews && !$processWhenCompiling;
     }
 }

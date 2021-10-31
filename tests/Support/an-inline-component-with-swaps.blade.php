@@ -1,0 +1,1 @@
+this is <x-torchlight-code torchlight-id='component' language='php' :swap='["hello" => "goodbye"]'>echo "hello world"</x-torchlight-code> inline
