@@ -36,6 +36,13 @@ class Block
     public $code;
 
     /**
+     * The post processors.
+     *
+     * @var array
+     */
+    public $postProcessors = [];
+
+    /**
      * The highlighted code, wrapped in pre+code tags.
      *
      * @var string
@@ -167,6 +174,19 @@ class Block
     public function code($code)
     {
         $this->code = $this->clean($code);
+
+        return $this;
+    }
+
+    /**
+     * @param $processor
+     * @return $this
+     */
+    public function addPostProcessor($processor)
+    {
+        if ($processor) {
+            $this->postProcessors[] = Torchlight::validatedPostProcessor($processor);
+        }
 
         return $this;
     }

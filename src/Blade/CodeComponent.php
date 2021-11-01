@@ -5,9 +5,11 @@
 
 namespace Torchlight\Blade;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
 use Torchlight\Block;
+use Torchlight\PostProcessors\SimpleSwapProcessor;
 use Torchlight\Torchlight;
 
 class CodeComponent extends Component
@@ -30,13 +32,23 @@ class CodeComponent extends Component
      * @param  null  $contents
      * @param  null  $torchlightId
      */
-    public function __construct($language, $theme = null, $contents = null, $torchlightId = null)
+    public function __construct($language, $theme = null, $contents = null, $swap = null, $postProcessors = [], $torchlightId = null)
     {
         $this->language = $language;
         $this->theme = $theme;
         $this->contents = $contents;
 
         $this->block = Block::make($torchlightId)->language($this->language)->theme($this->theme);
+
+        $postProcessors = Arr::wrap($postProcessors);
+
+        if ($swap) {
+            $postProcessors[] = SimpleSwapProcessor::make($swap);
+        }
+
+        foreach ($postProcessors as $processor) {
+            $this->block->addPostProcessor($processor);
+        }
     }
 
     public function withAttributes(array $attributes)

@@ -109,20 +109,13 @@ class Manager
 
     /**
      * @param  array|string  $classes
-     *
-     * @throws ConfigurationException
      */
     public function addPostProcessors($classes)
     {
         $classes = Arr::wrap($classes);
 
         foreach ($classes as $class) {
-            if (!in_array(PostProcessor::class, class_implements($class))) {
-                $class = is_string($class) ? $class : get_class($class);
-                throw new ConfigurationException("Post-processor '$class' does not implement " . PostProcessor::class);
-            }
-
-            $this->postProcessors[] = $class;
+            $this->postProcessors[] = $this->validatedPostProcessor($class);
         }
     }
 
@@ -131,21 +124,24 @@ class Manager
      */
     public function postProcessBlocks($blocks)
     {
+        // Global post-processors
         foreach ($this->postProcessors as $processor) {
-            $processor = app($processor);
-
-            // By default we do _not_ run post-processors when Laravel is compiling
-            // views, because it could lead to data leaks if a post-processor swaps
-            // user data in. If the developer understands this, they can turn
-            // `processEvenWhenCompiling` on and we'll happily run them.
-            $processWhenCompiling = property_exists($processor, 'processEvenWhenCompiling')
-                && $processor->processEvenWhenCompiling;
-
-            if ($this->currentlyCompilingViews && !$processWhenCompiling) {
+            if ($this->shouldSkipProcessor($processor)) {
                 continue;
             }
 
             foreach ($blocks as $block) {
+                $processor->process($block);
+            }
+        }
+
+        // Block specific post-processors
+        foreach ($blocks as $block) {
+            foreach ($block->postProcessors as $processor) {
+                if ($this->shouldSkipProcessor($processor)) {
+                    continue;
+                }
+
                 $processor->process($block);
             }
         }
@@ -244,5 +240,37 @@ class Manager
         preg_match_all('/__torchlight-block-\[(.+?)\]/', $content, $matches);
 
         return array_values(array_unique(Arr::get($matches, 1, [])));
+    }
+
+    /**
+     * @param $processor
+     * @return PostProcessor
+     *
+     * @throws ConfigurationException
+     */
+    public function validatedPostProcessor($processor)
+    {
+        if (is_string($processor)) {
+            $processor = app($processor);
+        }
+
+        if (!in_array(PostProcessor::class, class_implements($processor))) {
+            $class = get_class($processor);
+            throw new ConfigurationException("Post-processor '$class' does not implement " . PostProcessor::class);
+        }
+
+        return $processor;
+    }
+
+    protected function shouldSkipProcessor($processor)
+    {
+        // By default we do _not_ run post-processors when Laravel is compiling
+        // views, because it could lead to data leaks if a post-processor swaps
+        // user data in. If the developer understands this, they can turn
+        // `processEvenWhenCompiling` on and we'll happily run them.
+        $processWhenCompiling = property_exists($processor, 'processEvenWhenCompiling')
+            && $processor->processEvenWhenCompiling;
+
+        return $this->currentlyCompilingViews && !$processWhenCompiling;
     }
 }

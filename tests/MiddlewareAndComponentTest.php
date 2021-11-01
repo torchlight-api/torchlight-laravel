@@ -140,6 +140,40 @@ class MiddlewareAndComponentTest extends BaseTest
     }
 
     /** @test */
+    public function inline_swaps_run()
+    {
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'echo "hello world"',
+        ]);
+
+        $response = $this->getView('an-inline-component-with-swaps.blade.php');
+
+        $this->assertEquals(
+            'this is <code class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
+            $response->content()
+        );
+    }
+
+    /** @test */
+    public function inline_processors_run()
+    {
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'echo "hello world"',
+        ]);
+
+        $response = $this->getView('an-inline-component-with-post-processors.blade.php');
+
+        $this->assertEquals(
+            'this is <code class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
+            $response->content()
+        );
+    }
+
+    /** @test */
     public function language_can_be_set_via_component()
     {
         $this->fakeNullResponse('component');
