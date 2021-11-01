@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.6 - 2021-11-01
+
+### Added
+
+- Added the ability to run post-processors _per block_ rather than globally. ([#20](https://github.com/torchlight-api/torchlight-laravel/pull/20)) 
+
 ## 0.5.5 - 2021-09-06
 
 ### Changed
