@@ -28,9 +28,9 @@ class CodeComponent extends Component
      * Create a new component instance.
      *
      * @param $language
-     * @param null $theme
-     * @param null $contents
-     * @param null $torchlightId
+     * @param  null  $theme
+     * @param  null  $contents
+     * @param  null  $torchlightId
      */
     public function __construct($language, $theme = null, $contents = null, $swap = null, $postProcessors = [], $torchlightId = null)
     {

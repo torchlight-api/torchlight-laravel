@@ -156,7 +156,6 @@ class MiddlewareAndComponentTest extends BaseTest
         );
     }
 
-
     /** @test */
     public function inline_processors_run()
     {
