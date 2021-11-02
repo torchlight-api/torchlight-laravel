@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.7 - 2021-11-02
+
+### Added
+
+- `Block` is now Macroable
+
 ## 0.5.6 - 2021-11-01
 
 ### Added

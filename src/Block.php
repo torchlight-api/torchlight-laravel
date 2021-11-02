@@ -6,9 +6,12 @@
 namespace Torchlight;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 
 class Block
 {
+    use Macroable;
+
     /**
      * @var null|callable
      */
