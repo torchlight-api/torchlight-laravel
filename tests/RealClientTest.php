@@ -5,15 +5,9 @@
 
 namespace Torchlight\Tests;
 
-use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Torchlight\Block;
-use Torchlight\Client;
 use Torchlight\Middleware\RenderTorchlight;
-use Torchlight\Torchlight;
 
 class RealClientTest extends BaseTest
 {
