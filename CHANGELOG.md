@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.9 - 2022-01-19
+
+### Fixed
+
+- Fix cosmetic trailing space issue
+
 ## 0.5.8 - 2022-01-19
 
 ### Added

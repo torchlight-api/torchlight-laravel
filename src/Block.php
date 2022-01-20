@@ -200,7 +200,9 @@ class Block
             $attrs[] = "$key=\"$value\"";
         }
 
-        return implode(' ', $attrs) . ' ';
+        if (count($attrs)) {
+            return implode(' ', $attrs) . ' ';
+        }
     }
 
     /**

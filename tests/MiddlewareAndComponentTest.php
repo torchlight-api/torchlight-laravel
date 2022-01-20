@@ -89,6 +89,25 @@ class MiddlewareAndComponentTest extends BaseTest
     }
 
     /** @test */
+    public function no_attrs_no_trailing_space()
+    {
+        $this->fakeSuccessfulResponse('component', [
+            'classes' => 'torchlight',
+            'styles' => 'background-color: #292D3E;',
+            'highlighted' => 'this is the highlighted response from the server',
+            'attrs' => []
+        ]);
+
+        $response = $this->getView('simple-php-hello-world-with-style.blade.php');
+
+        $this->assertEquals(
+            '<pre><code class="torchlight" style="display: none;background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
+            $response->content()
+        );
+    }
+
+
+    /** @test */
     public function classes_get_merged()
     {
         $this->fakeSuccessfulResponse('component', [
