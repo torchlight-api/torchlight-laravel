@@ -78,10 +78,11 @@ class BladeManager
             $swap[$block->placeholder()] = $block->highlighted;
             $swap[$block->placeholder('classes')] = $block->classes;
             $swap[$block->placeholder('styles')] = $block->styles;
+            $swap[$block->placeholder('attrs')] = $block->attrsAsString();
         }
 
         // If this version of Laravel is affected by the spacing bug, then
-        // we will swap our our placeholders with a preceding space, and
+        // we will swap out our placeholders with a preceding space, and
         // a following space. This effectively fixes the bug.
         if (static::$affectedBySpacingBug) {
             $swap[' ##PRE_TL_COMPONENT##'] = '';

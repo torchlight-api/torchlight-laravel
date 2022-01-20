@@ -153,7 +153,7 @@ class Client
 
     protected function applyDirectlyFromResponse()
     {
-        return ['wrapped', 'highlighted', 'styles', 'classes'];
+        return ['wrapped', 'highlighted', 'styles', 'classes', 'attrs'];
     }
 
     protected function setCacheFromBlocks(Collection $blocks, Collection $ids)
@@ -214,7 +214,10 @@ class Client
             'highlighted' => $highlighted,
             'classes' => 'torchlight',
             'styles' => '',
-            'wrapped' => "<pre><code class='torchlight'>{$highlighted}</code></pre>",
+            'attrs' => [
+                'data-lang' => $block->language
+            ],
+            'wrapped' => "<pre><code data-lang='{$block->language}' class='torchlight'>{$highlighted}</code></pre>",
         ];
     }
 }

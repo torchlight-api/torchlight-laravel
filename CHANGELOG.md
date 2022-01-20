@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.8 - 2022-01-19
+
+### Added
+
+- Attributes from the API will now be passed on to the code component. (The API now returns 'data-lang' as an attribute.)
+
 ## 0.5.7 - 2021-11-02
 
 ### Added

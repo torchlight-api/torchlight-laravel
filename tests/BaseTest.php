@@ -63,6 +63,9 @@ abstract class BaseTest extends TestCase
                         $response[] = array_merge($block, [
                             'classes' => 'torchlight',
                             'styles' => 'background-color: #000000;',
+                            'attrs' => [
+                                'data-lang' => $block['language']
+                            ],
                             'wrapped' => "<pre><code>$highlighted</code></pre>",
                             'highlighted' => $highlighted,
                         ], $fake);

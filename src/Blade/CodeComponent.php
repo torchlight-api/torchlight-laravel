@@ -110,7 +110,7 @@ class CodeComponent extends Component
         // We have to add the ##PRE## and ##POST## tags to cover a framework bug.
         // @see BladeManager::renderContent.
         return <<<'EOT'
-##PRE_TL_COMPONENT##<code {{
+##PRE_TL_COMPONENT##<code {{ $block->placeholder('attrs') }}{{
         $attributes->except('style')->merge([
             'class' => $block->placeholder('classes'),
             'style' => $attributes->get('style') . $block->placeholder('styles')

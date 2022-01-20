@@ -74,6 +74,13 @@ class Block
     public $styles;
 
     /**
+     * Attributes to apply to the code tag.
+     *
+     * @var array
+     */
+    public $attrs = [];
+
+    /**
      * The unique ID for the block.
      *
      * @var string
@@ -179,6 +186,21 @@ class Block
         $this->code = $this->clean($code);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function attrsAsString()
+    {
+        $attrs = [];
+
+        foreach ($this->attrs as $key => $value) {
+            $value = addslashes($value);
+            $attrs[] = "$key=\"$value\"";
+        }
+
+        return implode(' ', $attrs) . ' ';
     }
 
     /**
