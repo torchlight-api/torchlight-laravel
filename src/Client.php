@@ -203,7 +203,7 @@ class Client
     /**
      * In the case where nothing returns from the API, we have to show _something_.
      *
-     * @param Block $block
+     * @param  Block  $block
      * @return array
      */
     protected function defaultResponse(Block $block)

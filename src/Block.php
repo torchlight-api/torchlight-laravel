@@ -89,7 +89,7 @@ class Block
     protected $id;
 
     /**
-     * @param null|string $id
+     * @param  null|string  $id
      * @return static
      */
     public static function make($id = null)
@@ -98,7 +98,7 @@ class Block
     }
 
     /**
-     * @param null|string $id
+     * @param  null|string  $id
      */
     public function __construct($id = null)
     {
@@ -151,7 +151,7 @@ class Block
     }
 
     /**
-     * @param string $extra
+     * @param  string  $extra
      * @return string
      */
     public function placeholder($extra = '')
