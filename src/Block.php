@@ -5,6 +5,7 @@
 
 namespace Torchlight;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 
@@ -88,7 +89,7 @@ class Block
     protected $id;
 
     /**
-     * @param  null|string  $id
+     * @param null|string $id
      * @return static
      */
     public static function make($id = null)
@@ -97,7 +98,7 @@ class Block
     }
 
     /**
-     * @param  null|string  $id
+     * @param null|string $id
      */
     public function __construct($id = null)
     {
@@ -105,7 +106,7 @@ class Block
         $this->id = $id ?? $this->generateId();
 
         // Set a default theme.
-        $this->theme = Torchlight::config('theme');
+        $this->theme(Torchlight::config('theme'));
     }
 
     /**
@@ -140,8 +141,17 @@ class Block
         );
     }
 
+    public function spawned($num)
+    {
+        if ($num) {
+            $this->id = Str::finish($this->id, "_clone_$num");
+        }
+
+        return $this;
+    }
+
     /**
-     * @param  string  $extra
+     * @param string $extra
      * @return string
      */
     public function placeholder($extra = '')
@@ -170,6 +180,8 @@ class Block
      */
     public function theme($theme)
     {
+        $theme = $this->normalizeArrayTheme($theme);
+
         if ($theme) {
             $this->theme = $theme;
         }
@@ -230,6 +242,26 @@ class Block
     }
 
     /**
+     * @return Block[]
+     */
+    public function spawnClones()
+    {
+        if (!Str::contains($this->theme, ',')) {
+            return [$this];
+        }
+
+        $themes = explode(',', $this->theme);
+
+        $blocks = [];
+
+        foreach ($themes as $i => $theme) {
+            $blocks[] = (clone $this)->theme($theme)->spawned($i);
+        }
+
+        return $blocks;
+    }
+
+    /**
      * @return array
      */
     public function toRequestParams()
@@ -241,6 +273,25 @@ class Block
             'theme' => $this->theme,
             'code' => $this->code,
         ];
+    }
+
+    /**
+     * @param $theme
+     * @return mixed|string
+     */
+    protected function normalizeArrayTheme($theme)
+    {
+        if (!is_array($theme)) {
+            return $theme;
+        }
+
+        if (Arr::isAssoc($theme)) {
+            return collect($theme)->map(function ($name, $label) {
+                return "$label:$name";
+            })->join(',');
+        }
+
+        return implode(',', $theme);
     }
 
     /**

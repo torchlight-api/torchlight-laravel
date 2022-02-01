@@ -39,7 +39,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world.blade.php');
 
         $this->assertEquals(
-            '<pre><code data-lang="php" class="torchlight" style=""><div class=\'line\'>echo &quot;hello world&quot;;</div></code></pre>',
+            '<pre><code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style=""><div class=\'line\'>echo &quot;hello world&quot;;</div></code></pre>',
             $response->content()
         );
 
@@ -66,7 +66,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world.blade.php');
 
         $this->assertEquals(
-            '<pre><code data-lang="php" class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
+            '<pre><code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
             $response->content()
         );
     }
@@ -83,7 +83,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world-with-style.blade.php');
 
         $this->assertEquals(
-            '<pre><code data-lang="php" class="torchlight" style="display: none;background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
+            '<pre><code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="display: none;background-color: #292D3E;">this is the highlighted response from the server</code></pre>',
             $response->content()
         );
     }
@@ -118,7 +118,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world-with-classes.blade.php');
 
         $this->assertEquals(
-            '<code data-lang="php" class="torchlight mt-4" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
+            '<code data-theme="material-theme-palenight" data-lang="php" class="torchlight mt-4" style="background-color: #292D3E;">this is the highlighted response from the server</code>',
             $response->content()
         );
     }
@@ -135,7 +135,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('simple-php-hello-world-with-attributes.blade.php');
 
         $this->assertEquals(
-            '<code data-lang="php" class="torchlight" style="background-color: #292D3E;" x-data="{}">this is the highlighted response from the server</code>',
+            '<code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="background-color: #292D3E;" x-data="{}">this is the highlighted response from the server</code>',
             $response->content()
         );
     }
@@ -152,7 +152,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('an-inline-component.blade.php');
 
         $this->assertEquals(
-            'this is <code data-lang="php" class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code> inline',
+            'this is <code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="background-color: #292D3E;">this is the highlighted response from the server</code> inline',
             $response->content()
         );
     }
@@ -169,7 +169,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('an-inline-component-with-swaps.blade.php');
 
         $this->assertEquals(
-            'this is <code data-lang="php" class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
+            'this is <code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
             $response->content()
         );
     }
@@ -186,7 +186,7 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('an-inline-component-with-post-processors.blade.php');
 
         $this->assertEquals(
-            'this is <code data-lang="php" class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
+            'this is <code data-theme="material-theme-palenight" data-lang="php" class="torchlight" style="background-color: #292D3E;">echo "goodbye world"</code> inline',
             $response->content()
         );
     }
@@ -247,7 +247,7 @@ class MiddlewareAndComponentTest extends BaseTest
 
         $response = $this->getView('dedent_works_properly.blade.php');
 
-        $result = "<code data-lang=\"php\" class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
+        $result = "<code data-theme=\"material-theme-palenight\" data-lang=\"php\" class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
 
         if (BladeManager::$affectedBySpacingBug) {
             $this->assertEquals(
@@ -270,7 +270,7 @@ class MiddlewareAndComponentTest extends BaseTest
 
         $response = $this->getView('two-codes-in-one-tag.blade.php');
 
-        $result = "<code data-lang=\"php\" class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
+        $result = "<code data-theme=\"material-theme-palenight\" data-lang=\"php\" class=\"torchlight\" style=\"\"><div class='line'>public function {</div><div class='line'>    // test</div><div class='line'>}</div></code>";
 
         if (BladeManager::$affectedBySpacingBug) {
             $this->assertEquals(
@@ -305,9 +305,9 @@ class MiddlewareAndComponentTest extends BaseTest
         $response = $this->getView('two-simple-php-hello-world.blade.php');
 
         $expected = <<<EOT
-<pre><code data-lang="php" class="torchlight1" style="background-color: #111111;">response 1</code></pre>
+<pre><code data-theme="material-theme-palenight" data-lang="php" class="torchlight1" style="background-color: #111111;">response 1</code></pre>
 
-<pre><code data-lang="php" class="torchlight2" style="background-color: #222222;">response 2</code></pre>
+<pre><code data-theme="material-theme-palenight" data-lang="php" class="torchlight2" style="background-color: #222222;">response 2</code></pre>
 EOT;
 
         $this->assertEquals($expected, $response->content());

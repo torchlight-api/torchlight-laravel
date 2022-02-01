@@ -7,6 +7,7 @@ namespace Torchlight\Blade;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Torchlight\Block;
 use Torchlight\Torchlight;
 
@@ -62,15 +63,48 @@ class BladeManager
             return $content;
         }
 
-        Torchlight::highlight(static::$blocks);
+        $response = Torchlight::highlight(static::$blocks);
+        $response = collect($response)->keyBy->id();
 
         $ids = Torchlight::findTorchlightIds($content);
+
+        foreach ($ids as $id) {
+            // For each block, stash the unadulterated content so
+            // we can duplicate it for clones if we need to.
+            $begin = "<!-- __torchlight-block-[$id]_begin__ -->";
+            $end = "<!-- __torchlight-block-[$id]_end__ -->";
+            $clean = Str::between($content, $begin, $end);
+
+            $i = 0;
+            $clones = '';
+
+            while (++$i) {
+                $clone = "{$id}_clone_{$i}";
+
+                if (!Arr::has($response, $clone)) {
+                    break;
+                }
+
+                // Swap the original ID with the cloned ID.
+                $clones .= str_replace(
+                    "__torchlight-block-[$id]", "__torchlight-block-[$clone]", $clean
+                );
+
+                $ids[] = $clone;
+            }
+
+            // Get rid of the first comment no matter what.
+            $content = str_replace($begin, '', $content);
+
+            // Replace the second comment with the clones.
+            $content = str_replace($end, $clones, $content);
+        }
 
         $swap = [];
 
         foreach ($ids as $id) {
             /** @var Block $block */
-            if (!$block = Arr::get(static::$blocks, $id)) {
+            if (!$block = Arr::get($response, $id)) {
                 continue;
             }
 

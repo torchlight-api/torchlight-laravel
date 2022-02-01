@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+- Added the ability to define multiple themes for e.g. dark mode.
+- Cache time is now configurable.
+
 ## 0.5.9 - 2022-01-19
 
 ### Fixed
