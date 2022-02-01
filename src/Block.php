@@ -94,7 +94,7 @@ class Block
     protected $clones = [];
 
     /**
-     * @param null|string $id
+     * @param  null|string  $id
      * @return static
      */
     public static function make($id = null)
@@ -262,7 +262,7 @@ class Block
     public function spawnClones()
     {
         $this->clones = [];
-        
+
         $themes = explode(',', $this->theme);
 
         // Set the theme for the current block, so that we
