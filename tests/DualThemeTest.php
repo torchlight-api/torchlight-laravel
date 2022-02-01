@@ -5,10 +5,8 @@
 
 namespace Torchlight\Tests;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Torchlight\Blade\BladeManager;
 use Torchlight\Middleware\RenderTorchlight;
 
 class DualThemeTest extends BaseTest
@@ -88,5 +86,4 @@ class DualThemeTest extends BaseTest
             $response->content()
         );
     }
-
 }
