@@ -64,6 +64,7 @@ abstract class BaseTest extends TestCase
                             'classes' => 'torchlight',
                             'styles' => 'background-color: #000000;',
                             'attrs' => [
+                                'data-theme' => $block['theme'],
                                 'data-lang' => $block['language']
                             ],
                             'wrapped' => "<pre><code>$highlighted</code></pre>",

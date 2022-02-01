@@ -7,6 +7,7 @@ namespace Torchlight\Blade;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Torchlight\Block;
 use Torchlight\Torchlight;
 
@@ -62,15 +63,49 @@ class BladeManager
             return $content;
         }
 
-        Torchlight::highlight(static::$blocks);
+        $response = Torchlight::highlight(static::$blocks);
+        $response = collect($response)->keyBy->id();
 
         $ids = Torchlight::findTorchlightIds($content);
 
+        // The first time through we have to expand all
+        // the blocks to include the clones.
+        foreach ($ids as $id) {
+            // For each block, stash the unadulterated content so
+            // we can duplicate it for clones if we need to.
+            $begin = "<!-- __torchlight-block-[$id]_begin__ -->";
+            $end = "<!-- __torchlight-block-[$id]_end__ -->";
+            $clean = Str::between($content, $begin, $end);
+
+            $clones = '';
+
+            if ($block = Arr::get($response, $id)) {
+                foreach ($block->clones() as $clone) {
+                    // Swap the original ID with the cloned ID.
+                    $clones .= str_replace(
+                        "__torchlight-block-[$id]", "__torchlight-block-[{$clone->id()}]", $clean
+                    );
+
+                    // Since we've added a new ID to the template, we
+                    // need to make sure we add it to the array of
+                    // IDs that drives the str_replace below.
+                    $ids[] = $clone->id();
+                }
+            }
+
+            // Get rid of the first comment no matter what.
+            $content = str_replace($begin, '', $content);
+
+            // Replace the second comment with the clones.
+            $content = str_replace($end, $clones, $content);
+        }
+
         $swap = [];
 
+        // Second time through we'll populate the replacement array.
         foreach ($ids as $id) {
             /** @var Block $block */
-            if (!$block = Arr::get(static::$blocks, $id)) {
+            if (!$block = Arr::get($response, $id)) {
                 continue;
             }
 

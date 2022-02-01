@@ -20,7 +20,9 @@ class Client
     {
         $blocks = Arr::wrap($blocks);
 
-        $blocks = $this->collectionOfBlocks($blocks)->keyBy->id();
+        $blocks = $this->collectionOfBlocks($blocks)->values();
+        $blocks = $blocks->merge($blocks->map->spawnClones())->flatten();
+        $blocks = $blocks->keyBy->id();
 
         // First set the html from the cache if it is already stored.
         $this->setBlocksFromCache($blocks);
@@ -170,7 +172,8 @@ class Client
             }
 
             if (count($value)) {
-                Torchlight::cache()->put($this->cacheKey($block), $value, $seconds = 7 * 24 * 60 * 60);
+                $seconds = Torchlight::config('cache_seconds', 7 * 24 * 60 * 60);
+                Torchlight::cache()->put($this->cacheKey($block), $value, $seconds);
             }
         });
     }
@@ -215,7 +218,8 @@ class Client
             'classes' => 'torchlight',
             'styles' => '',
             'attrs' => [
-                'data-lang' => $block->language
+                'data-theme' => $block->theme,
+                'data-lang' => $block->language,
             ],
             'wrapped' => "<pre><code data-lang='{$block->language}' class='torchlight'>{$highlighted}</code></pre>",
         ];
