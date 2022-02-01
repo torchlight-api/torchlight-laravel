@@ -73,7 +73,7 @@ class DualThemeTest extends BaseTest
             'highlighted' => 'response 1',
         ]);
 
-        $this->fakeSuccessfulResponse('component_clone_1', [
+        $this->fakeSuccessfulResponse('component_clone_0', [
             'classes' => 'torchlight2',
             'styles' => 'background-color: #222222;',
             'highlighted' => 'response 2',

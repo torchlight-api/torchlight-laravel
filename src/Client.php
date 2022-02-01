@@ -20,10 +20,9 @@ class Client
     {
         $blocks = Arr::wrap($blocks);
 
-        $blocks = $this->collectionOfBlocks($blocks)
-            ->map->spawnClones()
-            ->flatten()
-            ->keyBy->id();
+        $blocks = $this->collectionOfBlocks($blocks)->values();
+        $blocks = $blocks->merge($blocks->map->spawnClones())->flatten();
+        $blocks = $blocks->keyBy->id();
 
         // First set the html from the cache if it is already stored.
         $this->setBlocksFromCache($blocks);
@@ -203,7 +202,7 @@ class Client
     /**
      * In the case where nothing returns from the API, we have to show _something_.
      *
-     * @param  Block  $block
+     * @param Block $block
      * @return array
      */
     protected function defaultResponse(Block $block)

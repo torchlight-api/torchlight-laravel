@@ -89,7 +89,12 @@ class Block
     protected $id;
 
     /**
-     * @param  null|string  $id
+     * @var array
+     */
+    protected $clones = [];
+
+    /**
+     * @param null|string $id
      * @return static
      */
     public static function make($id = null)
@@ -141,11 +146,21 @@ class Block
         );
     }
 
-    public function spawned($num)
+    /**
+     * @return array
+     */
+    public function clones()
     {
-        if ($num) {
-            $this->id = Str::finish($this->id, "_clone_$num");
-        }
+        return $this->clones;
+    }
+
+    /**
+     * @param $num
+     * @return $this
+     */
+    public function cloned($num)
+    {
+        $this->id = Str::finish($this->id, "_clone_$num");
 
         return $this;
     }
@@ -246,19 +261,20 @@ class Block
      */
     public function spawnClones()
     {
-        if (!Str::contains($this->theme, ',')) {
-            return [$this];
-        }
-
+        $this->clones = [];
+        
         $themes = explode(',', $this->theme);
 
-        $blocks = [];
+        // Set the theme for the current block, so that we
+        // don't break the reference to it.
+        $this->theme(array_shift($themes));
 
-        foreach ($themes as $i => $theme) {
-            $blocks[] = (clone $this)->theme($theme)->spawned($i);
-        }
+        // Then generate any clones for the remaining themes.
+        $this->clones = collect($themes)->map(function ($theme, $num) {
+            return (clone $this)->theme($theme)->cloned($num);
+        })->toArray();
 
-        return $blocks;
+        return $this->clones;
     }
 
     /**

@@ -68,6 +68,8 @@ class BladeManager
 
         $ids = Torchlight::findTorchlightIds($content);
 
+        // The first time through we have to expand all
+        // the blocks to include the clones.
         foreach ($ids as $id) {
             // For each block, stash the unadulterated content so
             // we can duplicate it for clones if we need to.
@@ -75,22 +77,20 @@ class BladeManager
             $end = "<!-- __torchlight-block-[$id]_end__ -->";
             $clean = Str::between($content, $begin, $end);
 
-            $i = 0;
             $clones = '';
 
-            while (++$i) {
-                $clone = "{$id}_clone_{$i}";
+            if ($block = Arr::get($response, $id)) {
+                foreach ($block->clones() as $clone) {
+                    // Swap the original ID with the cloned ID.
+                    $clones .= str_replace(
+                        "__torchlight-block-[$id]", "__torchlight-block-[{$clone->id()}]", $clean
+                    );
 
-                if (!Arr::has($response, $clone)) {
-                    break;
+                    // Since we've added a new ID to the template, we
+                    // need to make sure we add it to the array of
+                    // IDs that drives the str_replace below.
+                    $ids[] = $clone->id();
                 }
-
-                // Swap the original ID with the cloned ID.
-                $clones .= str_replace(
-                    "__torchlight-block-[$id]", "__torchlight-block-[$clone]", $clean
-                );
-
-                $ids[] = $clone;
             }
 
             // Get rid of the first comment no matter what.
@@ -102,6 +102,7 @@ class BladeManager
 
         $swap = [];
 
+        // Second time through we'll populate the replacement array.
         foreach ($ids as $id) {
             /** @var Block $block */
             if (!$block = Arr::get($response, $id)) {
