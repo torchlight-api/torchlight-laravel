@@ -172,7 +172,7 @@ class Client
             }
 
             if (count($value)) {
-                $seconds = Torchlight::config('cache_seconds', 7 * 24 * 60 * 60);
+                $seconds = (int)Torchlight::config('cache_seconds', 7 * 24 * 60 * 60);
                 Torchlight::cache()->put($this->cacheKey($block), $value, $seconds);
             }
         });
