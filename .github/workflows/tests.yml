@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         php: [ 7.3, 7.4, 8.0 ]
-        laravel: [ 7.*, 8.* ]
+        laravel: [ 7.*, 8.*, 9.* ]
         dependency-version: [ prefer-lowest, prefer-stable ]
         include:
           - laravel: 7.*
@@ -24,6 +24,16 @@ jobs:
 
           - laravel: 8.*
             testbench: 6.*
+
+          - laravel: 9.*
+            testbench: 7.*
+
+        exclude:
+          - laravel: 9.*
+            php: 7.3
+
+          - laravel: 9.*
+            php: 7.4
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -54,15 +64,17 @@ jobs:
         run: vendor/bin/phpunit
 
       - name: Install Livewire V1
+        if: "! startsWith(matrix.laravel, '9.')"
         run: |
           composer require "livewire/livewire:^1" --no-interaction
 
       - name: Execute tests
+        if: "! startsWith(matrix.laravel, '9.')"
         run: vendor/bin/phpunit
 
       - name: Install Livewire V2
         run: |
-          composer require "livewire/livewire:^2" --no-interaction
+          composer require "livewire/livewire:^2.3.10" -W --${{ matrix.dependency-version }} --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
