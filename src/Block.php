@@ -223,7 +223,7 @@ class Block
         $attrs = [];
 
         foreach ($this->attrs as $key => $value) {
-            $value = addslashes($value);
+            $value = addslashes($value ?? '');
             $attrs[] = "$key=\"$value\"";
         }
 
@@ -263,7 +263,7 @@ class Block
     {
         $this->clones = [];
 
-        $themes = explode(',', $this->theme);
+        $themes = explode(',', $this->theme ?? '');
 
         // Set the theme for the current block, so that we
         // don't break the reference to it.
