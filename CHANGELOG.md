@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.5.11 - 2022-02-13
+
+### Added
+- Support for Laravel 9 [#29](https://github.com/torchlight-api/torchlight-laravel/pull/29)
+- Better support for PHP 8.1 [#30](https://github.com/torchlight-api/torchlight-laravel/pull/30) 
+
 ## 0.5.10 - 2022-02-01
 
 ### Added
