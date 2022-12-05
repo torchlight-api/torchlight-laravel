@@ -33,7 +33,7 @@ class RenderTorchlight
 
         $response = BladeManager::renderResponse($response);
 
-        // Clear blocks from memory to prevent memory leak when using Laravel Octane 
+        // Clear blocks from memory to prevent memory leak when using Laravel Octane
         BladeManager::clearBlocks();
 
         return $response;
