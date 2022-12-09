@@ -31,7 +31,12 @@ class RenderTorchlight
             return $response;
         }
 
-        return BladeManager::renderResponse($response);
+        $response = BladeManager::renderResponse($response);
+
+        // Clear blocks from memory to prevent memory leak when using Laravel Octane
+        BladeManager::clearBlocks();
+
+        return $response;
     }
 
     protected function handleLivewireRequest(JsonResponse $response)
