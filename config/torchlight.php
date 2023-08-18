@@ -6,7 +6,7 @@ return [
     // leave this blank your default app cache will be used.
     'cache' => env('TORCHLIGHT_CACHE_DRIVER'),
 
-    // Cache blocks for 30 days.
+    // Cache blocks for 30 days. Set null to store permanently
     'cache_seconds' => env('TORCHLIGHT_CACHE_TTL', 60 * 60 * 24 * 30),
 
     // Which theme you want to use. You can find all of the themes at
