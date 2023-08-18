@@ -71,7 +71,7 @@ class Manager
     }
 
     /**
-     * @param $value
+     * @param  $value
      */
     public function currentlyCompilingViews($value)
     {
@@ -79,7 +79,7 @@ class Manager
     }
 
     /**
-     * @param $blocks
+     * @param  $blocks
      * @return mixed
      */
     public function highlight($blocks)
@@ -120,7 +120,7 @@ class Manager
     }
 
     /**
-     * @param $blocks
+     * @param  $blocks
      */
     public function postProcessBlocks($blocks)
     {
@@ -172,7 +172,7 @@ class Manager
     /**
      * Get an item out of the config using dot notation.
      *
-     * @param $key
+     * @param  $key
      * @param  null  $default
      * @return mixed
      */
@@ -194,7 +194,7 @@ class Manager
      * A callback function used to access configuration. By default this
      * is null, which will fall through to Laravel's `config` function.
      *
-     * @param $callback
+     * @param  $callback
      */
     public function getConfigUsing($callback)
     {
@@ -247,7 +247,7 @@ class Manager
     }
 
     /**
-     * @param $processor
+     * @param  $processor
      * @return PostProcessor
      *
      * @throws ConfigurationException

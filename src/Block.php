@@ -155,7 +155,7 @@ class Block
     }
 
     /**
-     * @param $num
+     * @param  $num
      * @return $this
      */
     public function cloned($num)
@@ -179,7 +179,7 @@ class Block
     }
 
     /**
-     * @param $language
+     * @param  $language
      * @return $this
      */
     public function language($language)
@@ -190,7 +190,7 @@ class Block
     }
 
     /**
-     * @param $theme
+     * @param  $theme
      * @return $this
      */
     public function theme($theme)
@@ -205,7 +205,7 @@ class Block
     }
 
     /**
-     * @param $code
+     * @param  $code
      * @return $this
      */
     public function code($code)
@@ -233,7 +233,7 @@ class Block
     }
 
     /**
-     * @param $processor
+     * @param  $processor
      * @return $this
      */
     public function addPostProcessor($processor)
@@ -246,7 +246,7 @@ class Block
     }
 
     /**
-     * @param $wrapped
+     * @param  $wrapped
      * @return $this
      */
     public function wrapped($wrapped)
@@ -292,7 +292,7 @@ class Block
     }
 
     /**
-     * @param $theme
+     * @param  $theme
      * @return mixed|string
      */
     protected function normalizeArrayTheme($theme)
@@ -311,7 +311,7 @@ class Block
     }
 
     /**
-     * @param $code
+     * @param  $code
      * @return string
      */
     protected function clean($code)
@@ -323,7 +323,7 @@ class Block
     }
 
     /**
-     * @param $code
+     * @param  $code
      * @return string
      */
     protected function replaceTabs($code)
@@ -338,7 +338,7 @@ class Block
     }
 
     /**
-     * @param $code
+     * @param  $code
      * @return string
      */
     protected function dedent($code)
