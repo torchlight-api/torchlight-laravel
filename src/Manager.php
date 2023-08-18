@@ -159,7 +159,9 @@ class Manager
         array_unshift($directories, '');
 
         foreach ($directories as $directory) {
-            $directory = Str::finish($directory, DIRECTORY_SEPARATOR);
+            if (!empty($directory)) {
+                $directory = Str::finish($directory, DIRECTORY_SEPARATOR);
+            }
 
             if (is_file($directory . $file)) {
                 return file_get_contents($directory . $file);
