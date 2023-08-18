@@ -149,6 +149,10 @@ class Manager
 
     public function processFileContents($file)
     {
+        if (Str::startsWith($file, '##LARAVEL_TRIM_FIXER##')) {
+            return false;
+        }
+
         $directories = $this->config('snippet_directories', []);
 
         // Add a blank path to account for absolute paths.

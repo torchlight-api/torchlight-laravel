@@ -240,6 +240,18 @@ class MiddlewareAndComponentTest extends BaseTest
     }
 
     /** @test */
+    public function file_must_be_passed_via_contents()
+    {
+        $this->fakeNullResponse('component');
+
+        $this->getView('file-must-be-passed-through-contents.blade.php');
+
+        Http::assertSent(function ($request) {
+            return $request['blocks'][0]['code'] === config_path('app.php');
+        });
+    }
+
+    /** @test */
     public function dedent_works_properly()
     {
         $this->withoutExceptionHandling();
