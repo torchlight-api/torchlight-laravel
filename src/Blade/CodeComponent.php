@@ -27,7 +27,7 @@ class CodeComponent extends Component
     /**
      * Create a new component instance.
      *
-     * @param $language
+     * @param  $language
      * @param  null  $theme
      * @param  null  $contents
      * @param  null  $torchlightId
