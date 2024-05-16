@@ -8,7 +8,7 @@ namespace Torchlight\Tests;
 use Torchlight\Block;
 use Torchlight\Torchlight;
 
-class FindIdsTest extends BaseTest
+class FindIdsTest extends BaseTestCase
 {
     /** @test */
     public function it_will_find_all_the_ids()

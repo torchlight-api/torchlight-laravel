@@ -12,7 +12,7 @@ use Torchlight\Block;
 use Torchlight\Client;
 use Torchlight\Torchlight;
 
-class ClientTest extends BaseTest
+class ClientTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {

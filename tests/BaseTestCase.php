@@ -16,7 +16,7 @@ use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase;
 use Torchlight\TorchlightServiceProvider;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected $apiFaked = false;
 

@@ -11,7 +11,7 @@ use Torchlight\Exceptions\ConfigurationException;
 use Torchlight\PostProcessors\SimpleSwapProcessor;
 use Torchlight\Torchlight;
 
-class PostProcessorTest extends BaseTest
+class PostProcessorTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {

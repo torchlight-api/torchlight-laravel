@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Torchlight\Torchlight;
 
-class CustomizationTest extends BaseTest
+class CustomizationTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {
