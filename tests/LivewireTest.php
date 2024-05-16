@@ -19,15 +19,8 @@ class LivewireTest extends BaseTestCase
             return $this->markTestSkipped('Livewire not installed.');
         }
 
-        $version = InstalledVersions::getVersion('livewire/livewire');
-
-        if (version_compare($version, '2.0.0', '>=')) {
-            $this->assertTrue(in_array(
-                RenderTorchlight::class,
-                Livewire::getPersistentMiddleware()
-            ));
-        } else {
-            $this->markTestSkipped('Livewire 1 cannot register middleware.');
-        }
+        $this->assertTrue(in_array(
+            RenderTorchlight::class, Livewire::getPersistentMiddleware()
+        ));
     }
 }
