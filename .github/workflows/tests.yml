@@ -31,12 +31,20 @@ jobs:
           - laravel: 8.*
             php: 8.1
             dependency-version: prefer-lowest
+          - laravel: 8.*
+            php: 8.2
+            dependency-version: prefer-lowest
+          - laravel: 8.*
+            php: 8.3
+            dependency-version: prefer-lowest
 
-          - laravel: 10.*
-            php: 8.0
+          - laravel: 9.*
+            php: 8.2
+            dependency-version: prefer-lowest
+          - laravel: 9.*
+            php: 8.3
+            dependency-version: prefer-lowest
 
-          - laravel: 11.*
-            php: 8.0
           - laravel: 11.*
             php: 8.1
 
@@ -69,13 +77,11 @@ jobs:
       - name: Execute tests
         run: vendor/bin/phpunit
 
-      - name: Execute tests
-        if: "! startsWith(matrix.laravel, '9.')"
-        run: vendor/bin/phpunit
-
       - name: Install Livewire V2
+        if: "! startsWith(matrix.laravel, '11.')"
         run: |
           composer require "livewire/livewire:^2.3.10" -W --${{ matrix.dependency-version }} --no-interaction
 
       - name: Execute tests
+        if: "! startsWith(matrix.laravel, '11.')"
         run: vendor/bin/phpunit
