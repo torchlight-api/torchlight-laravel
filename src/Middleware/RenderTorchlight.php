@@ -48,8 +48,18 @@ class RenderTorchlight
         $data = $response->getData();
 
         $html = BladeManager::renderContent(data_get($data, 'effects.html'));
+        if (data_get($data, 'effects.html')) {
+            // Livewire v2
+            $html = BladeManager::renderContent(data_get($data, 'effects.html'));
 
-        data_set($data, 'effects.html', $html);
+            data_set($data, 'effects.html', $html);
+        } else {
+            // Livewire v3
+            foreach (data_get($data, 'components.*.effects.html') as $componentIndex => $componentHtml) {
+                $html = BladeManager::renderContent($componentHtml);
+                data_set($data, "components.$componentIndex.effects.html", $html);
+            }
+        }
 
         return $response->setData($data);
     }

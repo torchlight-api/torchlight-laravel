@@ -12,7 +12,7 @@ use Torchlight\Middleware\RenderTorchlight;
 class LivewireTest extends BaseTestCase
 {
     /** @test */
-    public function livewire_2_registers_a_middleware()
+    public function livewire_registers_a_middleware()
     {
         // Check for the Livewire Facade.
         if (!class_exists('\\Livewire\\Livewire')) {
