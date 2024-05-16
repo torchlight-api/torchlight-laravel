@@ -47,7 +47,6 @@ class RenderTorchlight
 
         $data = $response->getData();
 
-        $html = BladeManager::renderContent(data_get($data, 'effects.html'));
         if (data_get($data, 'effects.html')) {
             // Livewire v2
             $html = BladeManager::renderContent(data_get($data, 'effects.html'));
