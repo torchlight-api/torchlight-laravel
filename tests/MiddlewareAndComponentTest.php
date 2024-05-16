@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\View;
 use Torchlight\Blade\BladeManager;
 use Torchlight\Middleware\RenderTorchlight;
 
-class MiddlewareAndComponentTest extends BaseTest
+class MiddlewareAndComponentTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {

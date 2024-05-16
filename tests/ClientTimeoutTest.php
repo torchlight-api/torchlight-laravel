@@ -9,7 +9,7 @@ use Torchlight\Block;
 use Torchlight\Exceptions\RequestException;
 use Torchlight\Torchlight;
 
-class ClientTimeoutTest extends BaseTest
+class ClientTimeoutTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {

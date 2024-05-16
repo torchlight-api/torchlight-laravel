@@ -8,7 +8,7 @@ namespace Torchlight\Tests;
 use Torchlight\Block;
 use Torchlight\Torchlight;
 
-class BlockTest extends BaseTest
+class BlockTest extends BaseTestCase
 {
     /** @test */
     public function it_dedents_code()

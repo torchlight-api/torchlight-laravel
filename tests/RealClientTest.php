@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Torchlight\Middleware\RenderTorchlight;
 
-class RealClientTest extends BaseTest
+class RealClientTest extends BaseTestCase
 {
     public function getEnvironmentSetUp($app)
     {

@@ -9,7 +9,7 @@ use Composer\InstalledVersions;
 use Livewire\Livewire;
 use Torchlight\Middleware\RenderTorchlight;
 
-class LivewireTest extends BaseTest
+class LivewireTest extends BaseTestCase
 {
     /** @test */
     public function livewire_2_registers_a_middleware()
