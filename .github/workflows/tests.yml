@@ -88,12 +88,12 @@ jobs:
         run: vendor/bin/phpunit
 
       - name: Install Livewire V2 (Below Laravel 11.0)
-        if: "! startsWith(matrix.laravel, '11.') && ! startsWith(matrix.laravel, '12.')"
+        if: "! startsWith(matrix.laravel, '11.')"
         run: |
           composer require "livewire/livewire:^2.3.10" -W --${{ matrix.dependency-version }} --no-interaction
 
       - name: Test with Livewire V2
-        if: "! startsWith(matrix.laravel, '11.') && ! startsWith(matrix.laravel, '12.')"
+        if: "! startsWith(matrix.laravel, '11.')"
         run: vendor/bin/phpunit
 
       - name: Install Livewire V3 (Above Laravel 9.0)
