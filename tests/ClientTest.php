@@ -47,7 +47,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_sends_a_simple_request()
+    public function test_it_sends_a_simple_request()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -71,7 +71,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function block_theme_overrides_config()
+    public function test_block_theme_overrides_config()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -85,7 +85,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function a_block_with_html_wont_be_requested()
+    public function test_a_block_with_html_wont_be_requested()
     {
         $block = Block::make('id')->language('php')->code('echo "hello world";');
 
@@ -98,7 +98,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function only_blocks_without_html_get_sent()
+    public function test_only_blocks_without_html_get_sent()
     {
         $this->fakeSuccessfulResponse('1');
         $this->fakeSuccessfulResponse('2');
@@ -123,7 +123,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function a_block_gets_its_html_set()
+    public function test_a_block_gets_its_html_set()
     {
         $this->fakeSuccessfulResponse('success');
 
@@ -137,7 +137,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function cache_gets_set()
+    public function test_cache_gets_set()
     {
         $this->fakeSuccessfulResponse('success');
 
@@ -155,7 +155,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function already_cached_doesnt_get_sent_again()
+    public function test_already_cached_doesnt_get_sent_again()
     {
         $this->fakeSuccessfulResponse('success');
 
@@ -172,7 +172,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function if_theres_no_response_then_it_sets_a_default()
+    public function test_if_theres_no_response_then_it_sets_a_default()
     {
         $this->fakeNullResponse('unknown_id');
 
@@ -185,7 +185,7 @@ class ClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function a_500_error_returns_a_default_in_production()
+    public function test_a_500_error_returns_a_default_in_production()
     {
         Torchlight::overrideEnvironment('production');
 

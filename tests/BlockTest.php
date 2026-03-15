@@ -11,7 +11,7 @@ use Torchlight\Torchlight;
 class BlockTest extends BaseTestCase
 {
     /** @test */
-    public function it_dedents_code()
+    public function test_it_dedents_code()
     {
         $block = Block::make();
 
@@ -35,7 +35,7 @@ EOT;
     }
 
     /** @test */
-    public function it_replaces_tabs()
+    public function test_it_replaces_tabs()
     {
         $block = Block::make();
 
@@ -53,7 +53,7 @@ EOT;
     }
 
     /** @test */
-    public function can_change_tab_size()
+    public function test_can_change_tab_size()
     {
         Torchlight::getConfigUsing([
             'tab_width' => 2
@@ -75,7 +75,7 @@ EOT;
     }
 
     /** @test */
-    public function can_leave_tabs_in()
+    public function test_can_leave_tabs_in()
     {
         Torchlight::getConfigUsing([
             'tab_width' => false
@@ -91,7 +91,7 @@ EOT;
     }
 
     /** @test */
-    public function it_right_trims()
+    public function test_it_right_trims()
     {
         $block = Block::make()->code('echo 1;      ');
 
@@ -99,7 +99,7 @@ EOT;
     }
 
     /** @test */
-    public function you_can_set_your_own_id()
+    public function test_you_can_set_your_own_id()
     {
         $block = Block::make('custom_id');
 
@@ -107,7 +107,7 @@ EOT;
     }
 
     /** @test */
-    public function it_will_set_an_id()
+    public function test_it_will_set_an_id()
     {
         $block = Block::make();
 
@@ -115,7 +115,7 @@ EOT;
     }
 
     /** @test */
-    public function hash_is_calculated()
+    public function test_hash_is_calculated()
     {
         $block = Block::make();
 
@@ -142,7 +142,7 @@ EOT;
     }
 
     /** @test */
-    public function to_request_params_includes_required_info()
+    public function test_to_request_params_includes_required_info()
     {
         $block = Block::make('id');
         $block->code('new code');
@@ -159,7 +159,7 @@ EOT;
     }
 
     /** @test */
-    public function default_theme_is_used()
+    public function test_default_theme_is_used()
     {
         config()->set('torchlight.theme', 'a new default');
 
@@ -169,7 +169,7 @@ EOT;
     }
 
     /** @test */
-    public function can_specify_an_id_generator()
+    public function test_can_specify_an_id_generator()
     {
         Block::$generateIdsUsing = function () {
             return 'generated_via_test';

@@ -55,7 +55,7 @@ class RealClientTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_sends_a_simple_request_with_highlighted_response_real()
+    public function test_it_sends_a_simple_request_with_highlighted_response_real()
     {
         return $this->markTestSkipped();
 

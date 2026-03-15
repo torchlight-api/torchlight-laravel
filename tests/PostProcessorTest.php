@@ -22,7 +22,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_runs_post_processors()
+    public function test_it_runs_post_processors()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -38,7 +38,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_doesnt_run_when_compiling()
+    public function test_it_doesnt_run_when_compiling()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -56,7 +56,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_runs_when_compiling_if_requested()
+    public function test_it_runs_when_compiling_if_requested()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -75,7 +75,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function null_processor_works()
+    public function test_null_processor_works()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -91,7 +91,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function they_run_in_order()
+    public function test_they_run_in_order()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -108,7 +108,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_runs_inline_post_processors()
+    public function test_it_runs_inline_post_processors()
     {
         $this->fakeSuccessfulResponse('id');
 
@@ -121,7 +121,7 @@ class PostProcessorTest extends BaseTestCase
     }
 
     /** @test */
-    public function must_implement_interface()
+    public function test_must_implement_interface()
     {
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('Post-processor \'Torchlight\Block\' does not implement Torchlight\Contracts\PostProcessor');

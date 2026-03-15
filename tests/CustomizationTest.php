@@ -17,7 +17,7 @@ class CustomizationTest extends BaseTestCase
     }
 
     /** @test */
-    public function you_can_use_your_own_config_callback()
+    public function test_you_can_use_your_own_config_callback()
     {
         $this->assertEquals('token from config', Torchlight::config('token'));
 
@@ -31,14 +31,14 @@ class CustomizationTest extends BaseTestCase
     }
 
     /** @test */
-    public function prefixing_default_config_with_torchlight_is_ok()
+    public function test_prefixing_default_config_with_torchlight_is_ok()
     {
         $this->assertEquals('token from config', Torchlight::config('torchlight.token'));
         $this->assertEquals('token from config', Torchlight::config('token'));
     }
 
     /** @test */
-    public function cache_implementation_can_be_set()
+    public function test_cache_implementation_can_be_set()
     {
         // The default store will be the file store.
         config()->set('torchlight.cache', 'file');
@@ -62,7 +62,7 @@ class CustomizationTest extends BaseTestCase
     }
 
     /** @test */
-    public function environment_can_be_set()
+    public function test_environment_can_be_set()
     {
         $this->assertEquals('testing', Torchlight::environment());
 
@@ -76,7 +76,7 @@ class CustomizationTest extends BaseTestCase
     }
 
     /** @test */
-    public function config_can_be_array()
+    public function test_config_can_be_array()
     {
         $this->assertEquals('token from config', Torchlight::config('token'));
 

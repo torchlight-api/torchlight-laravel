@@ -20,7 +20,7 @@ class ClientTimeoutTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_catches_the_connect_exception()
+    public function test_it_catches_the_connect_exception()
     {
         $this->fakeTimeout('timeout');
 
@@ -33,7 +33,7 @@ class ClientTimeoutTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_catches_the_connect_exception_in_prod()
+    public function test_it_catches_the_connect_exception_in_prod()
     {
         $this->fakeTimeout('timeout');
 
@@ -48,7 +48,7 @@ class ClientTimeoutTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_catches_a_real_connection_exception()
+    public function test_it_catches_a_real_connection_exception()
     {
         config()->set('torchlight.host', 'https://nonexistent.torchlight.dev');
 

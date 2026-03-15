@@ -11,7 +11,7 @@ use Torchlight\Torchlight;
 class FindIdsTest extends BaseTestCase
 {
     /** @test */
-    public function it_will_find_all_the_ids()
+    public function test_it_will_find_all_the_ids()
     {
         $standard = Block::make();
         $custom1 = Block::make('custom-id');
@@ -35,7 +35,7 @@ EOT;
     }
 
     /** @test */
-    public function it_only_returns_one_per()
+    public function test_it_only_returns_one_per()
     {
         $standard = Block::make();
 
@@ -54,7 +54,7 @@ EOT;
     }
 
     /** @test */
-    public function its_always_an_array()
+    public function test_its_always_an_array()
     {
         $this->assertEquals([], Torchlight::findTorchlightIds('not found'));
     }

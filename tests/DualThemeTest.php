@@ -34,7 +34,7 @@ class DualThemeTest extends BaseTestCase
     }
 
     /** @test */
-    public function multiple_themes_with_comma()
+    public function test_multiple_themes_with_comma()
     {
         config()->set('torchlight.theme', [
             'github-dark,github-light'
@@ -44,7 +44,7 @@ class DualThemeTest extends BaseTestCase
     }
 
     /** @test */
-    public function multiple_themes_no_labels()
+    public function test_multiple_themes_no_labels()
     {
         config()->set('torchlight.theme', [
             'github-dark',
@@ -55,7 +55,7 @@ class DualThemeTest extends BaseTestCase
     }
 
     /** @test */
-    public function multiple_themes_with_labels()
+    public function test_multiple_themes_with_labels()
     {
         config()->set('torchlight.theme', [
             'dark' => 'github-dark',

@@ -32,7 +32,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_sends_a_simple_request_with_no_response()
+    public function test_it_sends_a_simple_request_with_no_response()
     {
         $this->fakeNullResponse('component');
 
@@ -55,7 +55,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_sends_a_simple_request_with_highlighted_response()
+    public function test_it_sends_a_simple_request_with_highlighted_response()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -72,7 +72,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function it_sends_a_simple_request_with_style()
+    public function test_it_sends_a_simple_request_with_style()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -89,7 +89,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function no_attrs_no_trailing_space()
+    public function test_no_attrs_no_trailing_space()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -107,7 +107,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function classes_get_merged()
+    public function test_classes_get_merged()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -124,7 +124,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function attributes_are_preserved()
+    public function test_attributes_are_preserved()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -141,7 +141,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function inline_keeps_its_spaces()
+    public function test_inline_keeps_its_spaces()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -158,7 +158,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function inline_swaps_run()
+    public function test_inline_swaps_run()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -175,7 +175,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function inline_processors_run()
+    public function test_inline_processors_run()
     {
         $this->fakeSuccessfulResponse('component', [
             'classes' => 'torchlight',
@@ -192,7 +192,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function language_can_be_set_via_component()
+    public function test_language_can_be_set_via_component()
     {
         $this->fakeNullResponse('component');
 
@@ -204,7 +204,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function theme_can_be_set_via_component()
+    public function test_theme_can_be_set_via_component()
     {
         $this->fakeNullResponse('component');
 
@@ -216,7 +216,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function code_contents_can_be_a_file()
+    public function test_code_contents_can_be_a_file()
     {
         $this->fakeNullResponse('component');
 
@@ -228,7 +228,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function code_contents_can_be_a_file_2()
+    public function test_code_contents_can_be_a_file_2()
     {
         $this->fakeNullResponse('component');
 
@@ -240,7 +240,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function file_must_be_passed_via_contents()
+    public function test_file_must_be_passed_via_contents()
     {
         $this->fakeNullResponse('component');
 
@@ -252,7 +252,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function dedent_works_properly()
+    public function test_dedent_works_properly()
     {
         $this->withoutExceptionHandling();
         $this->fakeNullResponse('component');
@@ -275,7 +275,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function two_code_in_one_pre()
+    public function test_two_code_in_one_pre()
     {
         $this->withoutExceptionHandling();
         $this->fakeNullResponse('component');
@@ -298,7 +298,7 @@ class MiddlewareAndComponentTest extends BaseTestCase
     }
 
     /** @test */
-    public function two_components_work()
+    public function test_two_components_work()
     {
         $this->fakeSuccessfulResponse('component1', [
             'id' => 'component1',
